@@ -14,22 +14,7 @@ import picocli.CommandLine.IVersionProvider;
         MAS.class
     }
 )
-public class JasonCLI { //implements Runnable {
-
-    // @Parameters(paramLabel = "<mas2j file>", 
-    //             defaultValue = "",
-    //             description = "mas2j file describing the initial state of the MAS")
-    // private String mas2j;
-
-    // @Override
-    // public void run() {
-    //     if (mas2j.isEmpty()) {
-    //         return;
-    //     }
-
-    //     System.out.println("Starting MAS from "+mas2j);
-    // }
-
+public class JasonCLI { 
     public static void main(String[] args) {
         int exitCode = new CommandLine(new JasonCLI()).execute(args);
         System.exit(exitCode);

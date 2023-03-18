@@ -2,9 +2,6 @@ package jason.cli.mas;
 
 import java.util.ArrayList;
 
-import jason.JasonException;
-import jason.architecture.MindInspectorWeb;
-import jason.infra.local.RunLocalMAS;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
@@ -54,6 +51,7 @@ public class Start implements Runnable {
         try {
             var r = new CLILocalMAS();
             r.initStart(args.toArray(new String[args.size()]), masName);
+            r.startCommandServer(masName);
             r.showInfo(console);
             r.waitEnd();
         } catch (Exception e) {
@@ -62,28 +60,3 @@ public class Start implements Runnable {
     }
 }
 
-class CLILocalMAS extends RunLocalMAS {
-    protected int initStart(String[] args, String masName) throws JasonException {
-        runner = this;
-        var r = super.init(args);
-        project.setSocName(masName);
-        registerMBean();
-        create();
-        start();
-        return r;
-    }
-
-    protected void showInfo(boolean console) {
-        System.out.println("MAS "+project.getSocName()+" is running");
-        MindInspectorWeb.get(); // to start http server for jason
-
-        if (console) {
-            System.out.println("open another terminal to enter more commands");
-        }
-    }
-
-    protected void waitEnd() {
-        super.waitEnd();
-        super.finish(0, true, 0);
-    }
-}

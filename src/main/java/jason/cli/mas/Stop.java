@@ -9,7 +9,6 @@ import java.util.Properties;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
 
 
 @Command(
@@ -22,6 +21,7 @@ public class Stop implements Runnable {
                description = "MAS unique identification")
     String masName;
 
+    
     @Override
     public void run() {
         var s = getRunningMAS(masName);

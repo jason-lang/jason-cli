@@ -2,7 +2,6 @@ package jason.cli.mas;
 
 import java.net.UnknownHostException;
 import jason.JasonException;
-import jason.architecture.MindInspectorWeb;
 import jason.infra.local.RunLocalMAS;
 
 public class CLILocalMAS extends RunLocalMAS {

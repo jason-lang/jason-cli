@@ -1,7 +1,9 @@
 package jason.cli.mas;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import jason.architecture.MindInspectorWeb;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
@@ -51,12 +53,31 @@ public class Start implements Runnable {
         try {
             var r = new CLILocalMAS();
             r.initStart(args.toArray(new String[args.size()]), masName);
-            r.startCommandServer(masName);
-            r.showInfo(console);
+            CommandServer s = r.startCommandServer(masName);
+            showInfo(s, masName, console);
             r.waitEnd();
         } catch (Exception e) {
             e.printStackTrace();
         } 
     }
+
+    protected void showInfo(CommandServer s, String masName, boolean console) {
+        var addr = "";
+        try {
+            addr = s.getAddress();
+        } catch (UnknownHostException e) {
+            addr = "error getting addr "+e.getMessage();
+        }
+        System.out.println("MAS "+masName+" is running ("+addr+")");
+        MindInspectorWeb.get(); // to start http server for jason
+        if (console) {
+            System.out.println("\nopen another terminal to enter more commands");
+            System.out.println("     jason <commands>");
+            System.out.println("example:");
+            System.out.println("     jason agent create bob");
+        }
+    }
+
+
 }
 

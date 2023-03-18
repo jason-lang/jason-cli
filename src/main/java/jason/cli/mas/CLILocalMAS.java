@@ -18,24 +18,7 @@ public class CLILocalMAS extends RunLocalMAS {
         return r;
     }
 
-    protected void showInfo(boolean console) {
-        var addr = "";
-        try {
-            addr = server.getAddress();
-        } catch (UnknownHostException e) {
-            addr = "error getting addr "+e.getMessage();
-        }
-        System.out.println("MAS "+project.getSocName()+" is running ("+addr+")");
-        MindInspectorWeb.get(); // to start http server for jason
-        if (console) {
-            System.out.println("\nopen another terminal to enter more commands");
-            System.out.println("     jason --mas="+project.getSocName()+" <commands>");
-            System.out.println("example:");
-            System.out.println("     jason --mas="+project.getSocName()+" agent create bob");
-        }
-    }
-
-    protected void startCommandServer(String masName) throws UnknownHostException {
+    protected CommandServer startCommandServer(String masName) throws UnknownHostException {
         server = new CommandServer(this);
         // var port = 
         server.configure();
@@ -44,6 +27,7 @@ public class CLILocalMAS extends RunLocalMAS {
         //File f = File.createTempFile(logPropFile, defaultProjectFileName)
         new Thread(server).start();
         server.storeAddr(masName);
+        return server;
     }
 
     protected void waitEnd() {

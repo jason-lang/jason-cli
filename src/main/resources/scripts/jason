@@ -10,4 +10,4 @@ if [ -z "$JASON_CLI_HOME" ] ; then
     cd "$CURDIR"
 fi
 
-java -cp "$JASON_CLI_HOME/libs/*" ASCIIArt $*
+java -cp "$JASON_CLI_HOME/libs/*" jason.cli.JasonCLI $*

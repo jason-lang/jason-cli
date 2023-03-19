@@ -7,7 +7,7 @@ agent start alice {
     +!s <- .send(bob,tell,hello).
 }
 
-echo 
+echo
 echo "beliefs of Bob:"
 agent beliefs bob # show beliefs of bob
 mas stop --exit

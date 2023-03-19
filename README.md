@@ -15,14 +15,14 @@ Example of use in a terminal (`jason>` is the prompt for JasonCLI):
     jason> exit
 
 
-In these example, 
+In this example, 
 
 * an (empty) MAS is created in the first command, 
 * agent bob is created (second command) -- with no beliefs or plans; 
 * agent alice is created (third command) -- with an initial goal and plan. 
 * alice achieves the goal `!start` by sending a message to  bob
-* the beliefs of bob are shown (fourth command)
-* the MAS finish (las command)
+* the beliefs of bob are shown (fourth command). 
+* the MAS is finished (last command).
 
 The shell provides completion and suggestions (using `<TAB>`).
 

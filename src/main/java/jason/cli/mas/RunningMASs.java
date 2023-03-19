@@ -65,14 +65,14 @@ public class RunningMASs {
                     var in  = new BufferedReader(new InputStreamReader(s.getInputStream()));
                     out.println("mas__running");
                     if (in.readLine().equals("no")) {
-                        System.out.println("    (removing "+masName+" from cache)");
+                        //System.out.println("    (removing "+masName+" from cache)");
                         props.remove(masName);
                         changed = true;
                     }
                     s.close();
                 } catch (Exception e) {
                     // e.printStackTrace();
-                    System.out.println("    (removing "+masName+" from cache)");
+                    //System.out.println("    (removing "+masName+" from cache)");
                     props.remove(masName);
                     changed = true;
                 }

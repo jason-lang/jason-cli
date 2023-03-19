@@ -42,8 +42,16 @@ public class Start implements Runnable {
         }
         var args = new ArrayList<String>();
 
-        if (masName.isEmpty())
+        var existing = RunningMASs.getAllRunningMAS().keySet();
+        if (masName.isEmpty()) {
             masName = "mas_" + (masCount++);
+            while (existing.contains(masName)) {
+                masName = "mas_" + (masCount++);
+            }
+        } else if (existing.contains(masName)) {
+            parent.parent.errorMsg("there is an MAS named "+masName+" already running, select another name");
+            return;
+        }
         
         if (!mas2j.isEmpty()) {
             args.add(mas2j);

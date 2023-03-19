@@ -10,6 +10,8 @@ jobs:
   build-jar-job:
     name: 'Build JAR'
     runs-on: ubuntu-latest
+    env:
+       ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 
     steps:
 

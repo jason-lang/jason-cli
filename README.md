@@ -39,12 +39,12 @@ Java 17 is required.
     ./gradlew jar
     export PATH=`pwd`/build/scripts:$PATH
 
-These commands will: download JasonCLI, build it, and add `jason` command on the `PATH`. 
+These commands will: download JasonCLI, build it, and add `jason` command in the `PATH`. 
 Ideally, change the `PATH` in the initialization of your terminal.
 
-## Execution
+## Uses
 
-### Interactive
+### Interactive Shell
 
 Type the command `jason`: 
 
@@ -55,24 +55,6 @@ Type the command `jason`:
     jason>
 
 and then `<TAB>` to discover the commands.
-
-### Command Line
-
-In your preferred shell:
-
-    $ jason mas start --console
-
-In another terminal:
-
-    $ jason mas start m1
-
-In another terminal:
-
-    $ jason mas list
-    $ jason mas stop --mas-name=m1 --exit
-
-
-(commands for agents are in ToDo)
 
 ### Scripts
 
@@ -123,3 +105,22 @@ jason>     hello[source(alice)]
 
 jason> mas_1 stopped
 ```
+
+### Command Line
+
+In your preferred terminal:
+
+    $ jason mas start --console
+
+In another terminal:
+
+    $ jason mas start m1
+
+In another terminal:
+
+    $ jason mas list
+    $ jason mas stop --mas-name=m1 --exit
+
+
+(commands for agents are in ToDo)
+

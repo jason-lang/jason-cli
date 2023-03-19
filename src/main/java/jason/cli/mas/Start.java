@@ -1,12 +1,12 @@
 package jason.cli.mas;
 
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-
 import jason.architecture.MindInspectorWeb;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
+
+import java.util.ArrayList;
 
 
 @Command(
@@ -18,6 +18,7 @@ public class Start implements Runnable {
     static private int masCount = 1;
 
     @Parameters(paramLabel = "<mas name>", defaultValue = "",
+               arity = "0..1",
                description = "MAS unique identification")
     String masName;
 
@@ -29,17 +30,22 @@ public class Start implements Runnable {
                 description = "mas2j file describing the initial state of the MAS")
     String mas2j;
 
+    @CommandLine.ParentCommand
+    protected MAS parent;
 
     @Override
     public void run() {
+        if (RunningMASs.hasLocalRunningMAS()) {
+            parent.parent.errorMsg("this process can run only one MAS, that currently is "+RunningMASs.getLocalRunningMAS().getProject().getSocName());
+            parent.parent.errorMsg("open another terminal for the new MAS, or stop the current one with 'mas stop'");
+            return;
+        }
         var args = new ArrayList<String>();
 
         if (masName.isEmpty())
             masName = "mas_" + (masCount++);
         
-        var mas2jMsg = "";
         if (!mas2j.isEmpty()) {
-            mas2jMsg = " from " + mas2j;
             args.add(mas2j);
         } else {
             args.add("--empty-mas");
@@ -52,32 +58,29 @@ public class Start implements Runnable {
 
         try {
             var r = new CLILocalMAS();
-            r.initStart(args.toArray(new String[args.size()]), masName);
-            CommandServer s = r.startCommandServer(masName);
-            showInfo(s, masName, console);
-            r.waitEnd();
+            r.init(args.toArray(new String[args.size()]), masName);
+            new Thread(r).start();
+
+            if (!parent.parent.hasCmdServer()) {
+                parent.parent.startCmdServer();
+            }
+            RunningMASs.storeRunningMAS(parent.parent.getCmdServer().getAddress());
+
+            showInfo(masName, console);
         } catch (Exception e) {
             e.printStackTrace();
         } 
     }
 
-    protected void showInfo(CommandServer s, String masName, boolean console) {
-        var addr = "";
-        try {
-            addr = s.getAddress();
-        } catch (UnknownHostException e) {
-            addr = "error getting addr "+e.getMessage();
-        }
-        System.out.println("MAS "+masName+" is running ("+addr+")");
+    protected void showInfo(String masName, boolean console) {
+        parent.parent.println("MAS "+masName+" is running ("+parent.parent.getCmdServer().getAddress()+")");
         MindInspectorWeb.get(); // to start http server for jason
-        if (console) {
-            System.out.println("\nopen another terminal to enter more commands");
-            System.out.println("     jason <commands>");
-            System.out.println("example:");
-            System.out.println("     jason agent create bob");
+        if (console && parent.parent.isTerminal()) {
+            parent.parent.println("\nsince the output of the MAS will be shown here, you may open another terminal to enter more commands");
+//            parent.parent.println("     jason <commands>");
+//            parent.parent.println("example:");
+//            parent.parent.println("     jason agent create bob");
         }
     }
-
-
 }
 

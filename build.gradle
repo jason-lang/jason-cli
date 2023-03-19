@@ -8,7 +8,7 @@ plugins {
 
 defaultTasks 'build'
 
-apply plugin: 'java-library'
+apply plugin: 'java'
 // apply plugin: 'maven-publish'
 
 version '1.0-SNAPSHOT'
@@ -40,8 +40,12 @@ repositories {
 
 dependencies {
     implementation 'org.jason:jason:3.2-SNAPSHOT'
-    implementation 'info.picocli:picocli:4.7.1'
-    annotationProcessor 'info.picocli:picocli-codegen:4.7.1'
+    // implementation 'info.picocli:picocli:4.7.1'
+    implementation 'info.picocli:picocli-shell-jline3:4.7.0'
+    annotationProcessor 'info.picocli:picocli-codegen:4.7.0'
+
+    implementation 'org.jline:jline:3.22.0'
+    implementation 'org.fusesource.jansi:jansi:2.4.0'
     // implementation('org.apache.ant:ant:1.10.5')
     // implementation('org.gradle:gradle-tooling-api:7.4.2')
 

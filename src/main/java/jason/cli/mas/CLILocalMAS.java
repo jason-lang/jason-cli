@@ -1,37 +1,41 @@
 package jason.cli.mas;
 
-import java.net.UnknownHostException;
 import jason.JasonException;
 import jason.infra.local.RunLocalMAS;
 
-public class CLILocalMAS extends RunLocalMAS {
-    CommandServer server;
+public class CLILocalMAS extends RunLocalMAS implements Runnable {
 
-    protected int initStart(String[] args, String masName) throws JasonException {
+    protected int init(String[] args, String masName) throws JasonException {
         runner = this;
+        RunningMASs.setLocalRunningMAS(this);
         var r = super.init(args);
-        project.setSocName(masName);
+        if (project.getSocName() == null || project.getSocName().isEmpty() || project.getSocName().equals("default"))
+            project.setSocName(masName);
         registerMBean();
         create();
-        start();
         return r;
     }
 
-    protected CommandServer startCommandServer(String masName) throws UnknownHostException {
-        server = new CommandServer(this);
-        // var port = 
-        server.configure();
-        // var addr = InetAddress.getLocalHost().getHostAddress()+":"+port;
-        // System.out.println("command server is running on port "+addr);
-        //File f = File.createTempFile(logPropFile, defaultProjectFileName)
-        new Thread(server).start();
-        server.storeAddr(masName);
-        return server;
+    @Override
+    public void run() {
+        super.start();
+        super.waitEnd();
     }
 
     protected void waitEnd() {
         super.waitEnd();
-        server.stop();
-        super.finish(0, true, 0);
+        finish(0, true, 0);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        RunningMASs.setLocalRunningMAS(null);
+    }
+
+    @Override
+    public void finish(int deadline, boolean stopJVM, int exitValue) {
+        super.finish(deadline, stopJVM, exitValue);
+        RunningMASs.setLocalRunningMAS(null);
     }
 }

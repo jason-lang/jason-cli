@@ -1,15 +1,12 @@
 package jason.cli.mas;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.util.Properties;
-
+import jason.cli.JasonCLI;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ParentCommand;
+
+import java.io.IOException;
+import java.io.PrintWriter;
 
 
 @Command(
@@ -22,27 +19,42 @@ public class Stop implements Runnable {
                description = "MAS unique identification")
     String masName;
 
+    @Option(names = { "--exit" }, description = "stops the MAS and terminates the process")
+    boolean exit;
+
     @ParentCommand
     private MAS parent;
-    
+
     @Override
     public void run() {
-        var s = parent.getRunningMAS(masName);
-        if (s != null) {
-            try (var out = new PrintWriter(s.getOutputStream(), true)) {
-                out.println("stop");
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (masName.isEmpty() && RunningMASs.hasLocalRunningMAS()) {
+            // stop the local running MAS
+            var localMAS = RunningMASs.getLocalRunningMAS();
+            if (exit) {
+                localMAS.finish();
+                System.exit(0);
+            } else {
+                localMAS.finish(0, false, 0);
             }
             return;
-        }
-
-        if (masName.isEmpty()) {
-            System.err.println("the MAS name should be informed");
         } else {
-            System.err.println("could not connect to the MAS named "+masName);
+            var s = RunningMASs.getRemoteRunningMAS(masName);
+            if (s != null) {
+                parent.parent.println("(trying to) stop MAS "+masName+" at "+s);
+
+                try (var out = new PrintWriter(s.getOutputStream(), true)) {
+                    if (exit)
+                        out.println("exit");
+                    else
+                        out.println("mas stop");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return;
+            }
         }
 
+        parent.parent.errorMsg("could not find an MAS to stop, run 'mas list' to see the list of running MAS.");
     }
 
 

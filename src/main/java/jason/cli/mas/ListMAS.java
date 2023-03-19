@@ -8,7 +8,7 @@ import picocli.CommandLine.Command;
     name = "list",
     description = "list current running MAS"
 )
-public class List implements Runnable {
+public class ListMAS implements Runnable {
 
     @CommandLine.ParentCommand
     protected MAS parent;

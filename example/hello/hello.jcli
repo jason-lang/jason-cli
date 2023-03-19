@@ -1,0 +1,5 @@
+mas start
+agent bob   start
+agent list
+agent alice start
+mas list

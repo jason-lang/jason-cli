@@ -1,6 +1,5 @@
 package jason.cli.mas;
 
-import jason.cli.JasonCLI;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ParentCommand;
@@ -15,7 +14,7 @@ import java.io.PrintWriter;
     name = "stop",
     description = "stops a MAS"
 )
-public class Stop implements Runnable {
+public class StopMAS implements Runnable {
     
     @Option(names = { "--mas-name" }, paramLabel = "<mas name>", defaultValue = "", 
                description = "MAS unique identification")

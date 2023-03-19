@@ -13,7 +13,7 @@ import java.util.ArrayList;
     name = "start",
     description = "starts a new (empty) MAS"
 )
-public class Start implements Runnable {
+public class StartMAS implements Runnable {
     
     static private int masCount = 1;
 

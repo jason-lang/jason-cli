@@ -1,5 +1,6 @@
 package jason.cli;
 
+import jason.cli.agent.Agent;
 import jason.cli.mas.CommandServer;
 import jason.cli.mas.MAS;
 import jason.cli.mas.RunningMASs;
@@ -11,6 +12,7 @@ import org.jline.console.impl.SystemRegistryImpl;
 import org.jline.keymap.KeyMap;
 import org.jline.reader.*;
 import org.jline.reader.impl.DefaultParser;
+import org.jline.reader.impl.DefaultParser.Bracket;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.widget.TailTipWidgets;
@@ -31,9 +33,8 @@ import java.util.function.Supplier;
         // version = "1.0",
         versionProvider = jason.cli.VersionProvider.class,
         mixinStandardHelpOptions = true,
-        subcommands = {
-                MAS.class
-        }
+        subcommands = {  MAS.class, Agent.class },
+        synopsisSubcommandLabel = "(mas | agent)"
 )
 public class JasonCLI {
 
@@ -113,6 +114,7 @@ public class JasonCLI {
                     Paths.get(System.getProperty("user.dir")),
                     Paths.get(System.getProperty("user.home"))
             );
+
             // set up jason commands
             var jasonCommands = new JasonCLI();
 
@@ -124,19 +126,24 @@ public class JasonCLI {
             CommandLine cmd = new CommandLine(jasonCommands, factory);
             PicocliCommands picocliCommands = new PicocliCommands(cmd);
 
-            Parser parser = new DefaultParser();
-            try (Terminal terminal = TerminalBuilder.builder().build()) {
+            var parser = new DefaultParser();
+            parser.setEofOnUnclosedBracket(Bracket.CURLY); //, Bracket.ROUND, Bracket.SQUARE);
+            parser.setEofOnUnclosedQuote(true);
+            try (var terminal = TerminalBuilder.builder().build()) {
                 SystemRegistry systemRegistry = new SystemRegistryImpl(parser, terminal, workDir, confPath);
                 systemRegistry.setCommandRegistries(picocliCommands);
                 systemRegistry.register("help", picocliCommands);
 
-                LineReader reader = LineReaderBuilder.builder()
+                var reader = LineReaderBuilder.builder()
                         .terminal(terminal)
                         .completer(systemRegistry.completer())
                         .parser(parser)
                         .variable(LineReader.LIST_MAX, 50)   // max tab completion candidates
+                        .variable(LineReader.INDENTATION, 4)
+                        .variable(LineReader.HISTORY_FILE, Paths.get(System.getProperty("user.home")+"/.jason-cli", "history"))
+                        .option(LineReader.Option.DISABLE_EVENT_EXPANSION,  true)
                         .build();
-                    jasonCommands.setReader(reader);
+                jasonCommands.setReader(reader);
                 factory.setTerminal(terminal);
                 TailTipWidgets widgets = new TailTipWidgets(reader, systemRegistry::commandDescription, 5, TailTipWidgets.TipType.COMPLETER);
                 widgets.enable();

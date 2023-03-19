@@ -108,17 +108,16 @@ public class RunningMASs {
                 } else {
                     addr = props.getProperty(masName, "");
                 }
+//                System.out.println("add found at "+addr);
                 if (!addr.isEmpty()) {
                     // try to connect
                     var saddr = addr.split(":");
-                    var host = saddr[0];
-                    var port = Integer.parseInt(saddr[1]);
-
-                    return new Socket(host, port);                        
+                    var s = new Socket(saddr[0], Integer.parseInt(saddr[1]));
+//                    System.out.println("returning s "+s);
+                    return s;
                 }
-
             } catch (Exception e) {
-                // e.printStackTrace();
+//                 e.printStackTrace();
             }
         }
         return null;

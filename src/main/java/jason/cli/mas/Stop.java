@@ -5,7 +5,9 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ParentCommand;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 
@@ -27,10 +29,11 @@ public class Stop implements Runnable {
 
     @Override
     public void run() {
-        if (masName.isEmpty() && RunningMASs.hasLocalRunningMAS()) {
+        if (masName.isEmpty() && RunningMASs.hasLocalRunningMAS() ||
+                RunningMASs.hasLocalRunningMAS() && RunningMASs.getLocalRunningMAS().getName().equals(masName)) {
             // stop the local running MAS
             var localMAS = RunningMASs.getLocalRunningMAS();
-            if (exit) {
+            if (exit || !parent.parent.isTerminal()) {
                 localMAS.finish();
                 System.exit(0);
             } else {
@@ -47,6 +50,10 @@ public class Stop implements Runnable {
                         out.println("exit");
                     else
                         out.println("mas stop");
+
+                    var in  = new BufferedReader(new InputStreamReader(s.getInputStream()));
+                    parent.parent.println(in.readLine());
+                    s.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -52,7 +52,8 @@ public class CommandServer implements Runnable {
                             var in  = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                             int i = 0;
                             String  cmd;
-                            while ((cmd = in.readLine()) != null && running) {
+                            if ((cmd = in.readLine()) != null && running) {
+//                                System.out.println("processing cmd "+cmd);
                                 if ("mas__running".equals(cmd)) {
                                     if (RunningMASs.hasLocalRunningMAS()) {
                                         out.println("yes");
@@ -61,13 +62,23 @@ public class CommandServer implements Runnable {
                                     }
                                 }
                                 if ("mas stop".equals(cmd)) {
-                                    if (RunningMASs.hasLocalRunningMAS())
+                                    if (RunningMASs.hasLocalRunningMAS()) {
+                                        var n = RunningMASs.getLocalRunningMAS().getName();
                                         RunningMASs.getLocalRunningMAS().finish(0, false, 0);
+                                        out.println(n+" stopped");
+                                    } else {
+                                        out.println("no MAS running here");
+                                    }
                                 }
                                 if ("exit".equals(cmd)) {
                                     running = false;
-                                    if (RunningMASs.hasLocalRunningMAS())
+                                    if (RunningMASs.hasLocalRunningMAS()) {
+                                        var n = RunningMASs.getLocalRunningMAS().getName();
                                         RunningMASs.getLocalRunningMAS().finish();
+                                        out.println(n+" stopped & exit!");
+                                    } else {
+                                        out.println("no MAS running here, but exiting anyway");
+                                    }
                                     System.exit(0);
                                 }
                                 out.println( (i++)+" done: "+cmd);

@@ -13,7 +13,6 @@ import org.jline.keymap.KeyMap;
 import org.jline.reader.*;
 import org.jline.reader.impl.DefaultParser;
 import org.jline.reader.impl.DefaultParser.Bracket;
-import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.widget.TailTipWidgets;
 import picocli.CommandLine;
@@ -33,7 +32,7 @@ import java.util.function.Supplier;
         // version = "1.0",
         versionProvider = jason.cli.VersionProvider.class,
         mixinStandardHelpOptions = true,
-        subcommands = {  MAS.class, Agent.class },
+        subcommands = {  MAS.class, Agent.class, Echo.class },
         synopsisSubcommandLabel = "(mas | agent)"
 )
 public class JasonCLI {
@@ -50,6 +49,7 @@ public class JasonCLI {
             System.out.println(s);
         } else {
             out.println(s);
+            out.flush();
         }
     }
     public void errorMsg(String s) {
@@ -129,6 +129,8 @@ public class JasonCLI {
             var parser = new DefaultParser();
             parser.setEofOnUnclosedBracket(Bracket.CURLY); //, Bracket.ROUND, Bracket.SQUARE);
             parser.setEofOnUnclosedQuote(true);
+            parser.blockCommentDelims(new DefaultParser.BlockCommentDelims("/*", "*/"))
+                    .lineCommentDelims(new String[] {"#", "//"});
             try (var terminal = TerminalBuilder.builder().build()) {
                 SystemRegistry systemRegistry = new SystemRegistryImpl(parser, terminal, workDir, confPath);
                 systemRegistry.setCommandRegistries(picocliCommands);
@@ -143,6 +145,7 @@ public class JasonCLI {
                         .variable(LineReader.HISTORY_FILE, Paths.get(System.getProperty("user.home")+"/.jason-cli", "history"))
                         .option(LineReader.Option.DISABLE_EVENT_EXPANSION,  true)
                         .build();
+
                 jasonCommands.setReader(reader);
                 factory.setTerminal(terminal);
                 TailTipWidgets widgets = new TailTipWidgets(reader, systemRegistry::commandDescription, 5, TailTipWidgets.TipType.COMPLETER);
@@ -150,19 +153,17 @@ public class JasonCLI {
                 KeyMap<Binding> keyMap = reader.getKeyMaps().get("main");
                 keyMap.bind(new Reference("tailtip-toggle"), KeyMap.alt("s"));
 
-                String prompt = "jason> ";
-                String rightPrompt = null;
-
                 // start the shell and process input until the user quits with Ctrl-D
                 String line;
                 while (true) {
                     try {
                         systemRegistry.cleanUp();
-                        line = reader.readLine(prompt, rightPrompt, (MaskingCallback) null, null);
+                        line = reader.readLine("jason> ");
                         systemRegistry.execute(line);
                     } catch (UserInterruptException e) {
-                        // Ignore
+                        systemRegistry.trace(e);
                     } catch (EndOfFileException e) {
+                        terminal.writer().println("\n<end of script>");
                         return;
                     } catch (Exception e) {
                         systemRegistry.trace(e);
@@ -180,5 +181,20 @@ public class JasonCLI {
 class VersionProvider implements IVersionProvider {
     public String[] getVersion() {
         return new String[] { "Jason " + Config.get().getJasonVersion() };
+    }
+}
+
+@Command(name = "echo")
+class Echo implements Runnable {
+
+    @CommandLine.ParentCommand
+    protected JasonCLI parent;
+
+    @CommandLine.Parameters(paramLabel = "<message>", defaultValue = "")
+    String msg;
+
+    @Override
+    public void run() {
+        parent.println(msg);
     }
 }

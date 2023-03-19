@@ -30,6 +30,8 @@ public class BeliefsAgent implements Runnable {
             return;
         }
 
+        //parent.parent.println("beliefs of "+agName+":");
+
         var ag = RunningMASs.getLocalRunningMAS().getAg(agName).getTS().getAg();
         var out = new StringBuilder();
         for (var ns: ag.getBB().getNameSpaces()) {
@@ -48,7 +50,7 @@ public class BeliefsAgent implements Runnable {
                     var p  = bs.indexOf("::");
                     if (p>0)
                         bs = bs.substring(p+2);
-                    out.append("   "+bs+"\n");
+                    out.append("    "+bs+"\n");
                 }
             }
         }

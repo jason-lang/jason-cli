@@ -1,5 +1,13 @@
-mas start
-agent bob   start
-agent list
-agent alice start
-mas list
+mas start --console
+agent start bob {
+    +hello[source(A)] <- .print("hello from ",A).
+}
+agent start alice {
+    !s.
+    +!s <- .send(bob,tell,hello).
+}
+
+echo 
+echo "beliefs of Bob:"
+agent beliefs bob # show beliefs of bob
+mas stop --exit

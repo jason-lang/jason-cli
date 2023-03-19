@@ -18,8 +18,9 @@ public class ListAgents implements Runnable {
     @Override
     public void run() {
         var all = RunningMASs.getLocalRunningMAS();
+        //parent.parent.println("agents:");
         for  (var ag: all.getAgs().keySet()) {
-            parent.parent.println(ag);
+            parent.parent.println("    "+ag);
         }
     }
 }

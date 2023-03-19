@@ -36,7 +36,7 @@ public class StartAgent implements Runnable {
 
     @Override
     public void run() {
-        parent.parent.println("all="+allParameters + " agname "+agName);
+//        parent.parent.println("all="+allParameters + " agname "+agName);
 
         if (!RunningMASs.hasLocalRunningMAS()) {
             parent.parent.errorMsg("no running MAS, create one with 'mas start'.");
@@ -53,7 +53,7 @@ public class StartAgent implements Runnable {
             if (last.startsWith("{")) {
                 code =  last.substring(1,last.length()-1).trim();
             }
-            parent.parent.println("*** code = "+code);
+//            parent.parent.println("*** code = "+code);
         }
 
         var ags = new ArrayList<String>();
@@ -77,7 +77,7 @@ public class StartAgent implements Runnable {
                     var ag = RunningMASs.getLocalRunningMAS().getAg(a).getTS().getAg();
                     ag.parseAS(
                             new StringReader(code),
-                            "from-JasonCLI-parameter"
+                            "jasonCLI-parameter"
                     );
                     ag.addInitialBelsInBB();
                     ag.addInitialGoalsInTS();

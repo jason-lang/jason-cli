@@ -1,8 +1,8 @@
 # Command Line Interface (CLI) for Jason
 
-This project provides a CLI for Jason user. 
+This project provides a CLI for Jason users. 
 
-Example of use (`jason>` is the prompt for JasonCLI):
+Example of use in a terminal (`jason>` is the prompt for JasonCLI):
 
     jason> mas start
     jason> agent start bob
@@ -15,7 +15,18 @@ Example of use (`jason>` is the prompt for JasonCLI):
     jason> exit
 
 
+In these example, 
+
+* an (empty) MAS is created in the first command, 
+* agent bob is created (second command) -- with no beliefs or plans; 
+* agent alice is created (third command) -- with an initial goal and plan. 
+* alice achieves the goal `!start` by sending a message to  bob
+* the beliefs of bob are shown (fourth command)
+* the MAS finish (las command)
+
 The shell provides completion and suggestions (using `<TAB>`).
+
+![screen show](docs/figs/s1.png)
 
 ## Installation
 

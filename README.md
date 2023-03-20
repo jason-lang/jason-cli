@@ -34,8 +34,6 @@ The shell provides completion and suggestions (using `<TAB>`).
 
 Java 17 is required.
 
-
-
     git clone https://github.com/jason-lang/jason-cli.git
     cd jason-cli
     ./gradlew jar
@@ -56,7 +54,7 @@ Type the command `jason`:
       Press Ctrl-D to exit.
     jason>
 
-and then `<TAB>` to discover the commands.
+the `<TAB>` key is your new 'mouse' to explore the system.
 
 ### Scripts
 

@@ -61,49 +61,47 @@ the `<TAB>` key is your new 'mouse' to explore the system.
 Create a script file, for instance, a file called `hello.jcli` with content:
 
 ```
-mas start --console
-agent start bob {        # starts bob with a plan
+mas start
+agent start bob {         # starts bob with a plan
     +hello[source(A)] <- .print("hello from ",A).
 }
-agent start alice {
-    !s.
-    +!s <- .send(bob,tell,hello).
-}
+agent start alice
+agent run-as alice { .send(bob,tell,hello) }  # alice executes the .send...
 
-echo
 echo "beliefs of Bob:"
-agent beliefs bob          # show beliefs of bob
-mas stop --exit
+agent beliefs bob         # show beliefs of bob
 ```
 
 then  run it with
 
     $ jason < hello.jcli
 
-the output will be:
+the output in the _MAS Console_ will be:
+
+```
+[alice] done
+[bob] hello from alice
+```
+
+and the output in the terminal is:
 
 ```
 Jason interactive shell with completion and autosuggestions.
       Hit <TAB> to see available commands.
       Press Ctrl-D to exit.
 jason> starting MAS mas_1 ...
-MAS mas_1 is running (127.0.0.1:51917)
-Agent mind inspector is running at http://127.0.0.1:3272
-jason> agent start bob {        # starts bob with a plan
+MAS mas_1 is running (127.0.0.1:56149)
+jason> agent start bob {
 add: }>         +hello[source(A)] <- .print("hello from ",A).
-add: }>     }agent bob started.
-jason> agent start alice {
-add: }>         !s.
-add: }>         +!s <- .send(bob,tell,hello).
-add: }>     }agent alice started.
-jason> jason> 
-
-[bob] hello from alice
-
+add: }>     }
+agent bob started.
+jason> agent alice started.
+jason> agent run-as alice { .send(bob,tell,hello) }
+jason>
 jason> beliefs of Bob:
 jason>     hello[source(alice)]
-
-jason> mas_1 stopped
+jason>
+<end of script>
 ```
 
 ### Command Line

@@ -7,8 +7,8 @@ import picocli.CommandLine.Command;
 @Command(
     name = "agent",
     description = "commands to handle agents",
-    subcommands = { StartAgent.class, StopAgent.class, ListAgents.class, BeliefsAgent.class, PlansAgent.class },
-    synopsisSubcommandLabel = "(start | stop | list | beliefs | plans )"
+    subcommands = { StartAgent.class, StopAgent.class, ListAgents.class, BeliefsAgent.class, PlansAgent.class, StatusAgent.class },
+    synopsisSubcommandLabel = "(start | stop | list | beliefs | plans | status)"
 )
 public class Agent {
 

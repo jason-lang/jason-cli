@@ -1,13 +1,11 @@
-mas start --console
+mas start
 agent start bob {
     +hello[source(A)] <- .print("hello from ",A).
 }
-agent start alice {
-    !s.
-    +!s <- .send(bob,tell,hello).
-}
+agent start alice
+agent run-as alice { .send(bob,tell,hello) }  # alice executes the .send...
 
 echo
 echo "beliefs of Bob:"
-agent beliefs bob # show beliefs of bob
-mas stop --exit
+agent beliefs bob         # show beliefs of bob
+

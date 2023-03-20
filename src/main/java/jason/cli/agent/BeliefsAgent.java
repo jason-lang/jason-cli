@@ -29,8 +29,10 @@ public class BeliefsAgent implements Runnable {
             parent.parent.errorMsg("the name of the agent should be informed, e.g., 'agent beliefs bob'.");
             return;
         }
-
-        //parent.parent.println("beliefs of "+agName+":");
+        if (RunningMASs.getLocalRunningMAS().getAg(agName) == null) {
+            parent.parent.errorMsg("the agent with name " + agName + " is not running!");
+            return;
+        }
 
         var ag = RunningMASs.getLocalRunningMAS().getAg(agName).getTS().getAg();
         var out = new StringBuilder();

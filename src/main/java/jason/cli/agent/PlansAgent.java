@@ -26,9 +26,14 @@ public class PlansAgent implements Runnable {
             return;
         }
         if (agName.isEmpty()) {
-            parent.parent.errorMsg("the name of the agent should be informed, e.g., 'agent beliefs bob'.");
+            parent.parent.errorMsg("the name of the agent should be informed, e.g., 'agent plans bob'.");
             return;
         }
+        if (RunningMASs.getLocalRunningMAS().getAg(agName) == null) {
+            parent.parent.errorMsg("the agent with name " + agName + " is not running!");
+            return;
+        }
+
         //parent.parent.println("plans of "+agName+":");
         var ag = RunningMASs.getLocalRunningMAS().getAg(agName).getTS().getAg();
         parent.parent.println( ag.getPL().getAsTxt(false).trim());

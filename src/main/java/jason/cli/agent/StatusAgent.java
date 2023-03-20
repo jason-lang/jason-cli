@@ -26,9 +26,14 @@ public class StatusAgent implements Runnable {
             return;
         }
         if (agName.isEmpty()) {
-            parent.parent.errorMsg("the name of the agent should be informed, e.g., 'agent beliefs bob'.");
+            parent.parent.errorMsg("the name of the agent should be informed, e.g., 'agent status bob'.");
             return;
         }
+        if (RunningMASs.getLocalRunningMAS().getAg(agName) == null) {
+            parent.parent.errorMsg("the agent with name " + agName + " is not running!");
+            return;
+        }
+
         var status = RunningMASs.getLocalRunningMAS().getAg(agName).getStatus();
         for (var k: status.keySet()) {
             parent.parent.println("    "+k+": "+status.get(k));

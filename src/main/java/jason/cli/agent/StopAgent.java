@@ -33,6 +33,11 @@ public class StopAgent implements Runnable {
             parent.parent.errorMsg("the name of the agent should be informed, e.g., 'agent stop bob'.");
             return;
         }
+        if (RunningMASs.getLocalRunningMAS().getAg(agName) == null) {
+            parent.parent.errorMsg("the agent with name " + agName + " is not running!");
+            return;
+        }
+
 
         var rt =  RuntimeServicesFactory.get();
         if (!rt.getAgentsNames().contains(agName)) {

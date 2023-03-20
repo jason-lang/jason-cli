@@ -12,6 +12,7 @@ Example of use in a terminal (`jason>` is the prompt for JasonCLI):
     }
     jason> agent beliefs bob
         hello[source(alice)]
+    jason> agent run-as bob { .send(alice,tell,hello) }
     jason> exit
 
 
@@ -22,6 +23,7 @@ In this example,
 * agent alice is created (third command) -- with an initial goal and plan. 
 * alice achieves the goal `!start` by sending a message to  bob
 * the beliefs of bob are shown (fourth command). 
+* bob also send a hello message to alice (fifth command).
 * the MAS is finished (last command).
 
 The shell provides completion and suggestions (using `<TAB>`).

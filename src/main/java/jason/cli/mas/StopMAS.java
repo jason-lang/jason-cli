@@ -34,9 +34,11 @@ public class StopMAS implements Runnable {
             var localMAS = RunningMASs.getLocalRunningMAS();
             if (exit || !parent.parent.isTerminal()) {
                 localMAS.finish();
+                parent.parent.println(localMAS.getName()+" stopped");
                 System.exit(0);
             } else {
                 localMAS.finish(0, false, 0);
+                parent.parent.println(localMAS.getName()+" stopped");
             }
             return;
         } else {

@@ -1,0 +1,7 @@
+mas start --console
+#agent start --source=src/test/jason/plan.asl bob
+agent start bob { +!a <- +b; .println("***** oi"). }
+agent run-as bob { +c; !a; }
+#agent mind --intentions --plans bob
+#agent status bob
+#mas stop --exit

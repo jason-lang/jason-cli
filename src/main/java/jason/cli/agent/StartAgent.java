@@ -25,7 +25,7 @@ public class StartAgent implements Runnable {
     @CommandLine.Option(names = { "--instances" }, defaultValue = "1", description = "how many agents should be created")
     int instances;
 
-    @CommandLine.Option(names = { "--source" }, defaultValue = "", description = "file (or URL) for the source code of the agent.")
+    @CommandLine.Option(names = { "--source" }, defaultValue = "", paramLabel = "<source file>", description = "file (or URL) for the source code of the agent.")
     String sourceFile;
 
     @Parameters(hidden = true)  // "hidden": don't show this parameter in usage help message
@@ -70,12 +70,10 @@ public class StartAgent implements Runnable {
         for (String a: ags) {
             // load code informed as parameter
             if (code != null && !code.isEmpty()) {
+                //parent.parent.println("code is |"+code+"|");
                 try {
                     var ag = RunningMASs.getLocalRunningMAS().getAg(a).getTS().getAg();
-                    ag.parseAS(
-                            new StringReader(code),
-                            "jasonCLI-parameter"
-                    );
+                    ag.parseAS(new StringReader(code),"jasonCLI-parameter");
                     ag.addInitialBelsInBB();
                     ag.addInitialGoalsInTS();
                 } catch (Exception e) {

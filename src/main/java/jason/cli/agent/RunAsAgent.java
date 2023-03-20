@@ -66,7 +66,10 @@ public class RunAsAgent implements Runnable {
 
     void execCmd(String sCmd, AgArch ag) {
         try {
+            sCmd = sCmd.trim();
             if (sCmd.endsWith("."))
+                sCmd = sCmd.substring(0,sCmd.length()-1);
+            while (sCmd.endsWith(";"))
                 sCmd = sCmd.substring(0,sCmd.length()-1);
 
             sCmd += ";"+ print_unifier.class.getName();

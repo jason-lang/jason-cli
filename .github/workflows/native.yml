@@ -2,7 +2,7 @@ name: GraalVM Native Image builds
 on: [push, pull_request]
 jobs:
   build:
-    name: HelloWorld on ${{ matrix.os }}
+    name: Native JasonCLI on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -20,14 +20,14 @@ jobs:
 
       - name: Build and run HelloWorld.java
         run: |
-          ./gradlew
+          ./gradlew  jar
+          mkdir bin
           #echo 'public class HelloWorld { public static void main(String[] args) { System.out.println("Hello, World!"); } }' > HelloWorld.java
           #javac HelloWorld.java
-          native-image -cp "build/libs/*" jason.cli.JasonCLI -o jason
-          #./helloworld
+          native-image -cp "build/libs/*" jason.cli.JasonCLI -o bin/jason
       
       - name: Upload binary
         uses: actions/upload-artifact@v2
         with:
-          name: helloworld-${{ matrix.os }}
-          path: helloworld*
+          name: jason-cli-${{ matrix.os }}
+          path: bin/jason*

@@ -1,5 +1,6 @@
 package jason.cli.agent;
 
+import jason.asSyntax.ASSyntax;
 import jason.cli.mas.RunningMASs;
 import jason.runtime.RuntimeServicesFactory;
 import picocli.CommandLine;
@@ -42,6 +43,15 @@ public class StartAgent implements Runnable {
         }
         if (agName.isEmpty()) {
             parent.parent.errorMsg("the name of the new agent should be informed, e.g., 'agent start bob'.");
+            return;
+        }
+        try {
+            if (!ASSyntax.parseTerm(agName).isAtom()) {
+                parent.parent.errorMsg("the name of the new agent should be a valid identifier, e.g., 'agent start bob'.");
+                return;
+            }
+        } catch (Exception e) {
+            parent.parent.errorMsg("the name of the new agent should be a valid identifier, e.g., 'agent start bob'.");
             return;
         }
 

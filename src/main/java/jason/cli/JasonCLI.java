@@ -15,6 +15,7 @@ import org.jline.reader.impl.DefaultParser;
 import org.jline.reader.impl.DefaultParser.Bracket;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.widget.TailTipWidgets;
+import org.jline.widget.Widgets;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.IVersionProvider;
@@ -128,6 +129,7 @@ public class JasonCLI {
             parser.setEofOnUnclosedQuote(true);
             parser.blockCommentDelims(new DefaultParser.BlockCommentDelims("/*", "*/"))
                     .lineCommentDelims(new String[] {"#", "//"});
+
             try (var terminal = TerminalBuilder.builder().build()) {
                 SystemRegistry systemRegistry = new SystemRegistryImpl(parser, terminal, workDir, confPath);
                 systemRegistry.setCommandRegistries(picocliCommands);
@@ -137,10 +139,7 @@ public class JasonCLI {
                         .terminal(terminal)
                         .completer(systemRegistry.completer())
                         .parser(parser)
-                        .variable(LineReader.LIST_MAX, 50)   // max tab completion candidates
-                        .variable(LineReader.INDENTATION, 4)
-                        .variable(LineReader.HISTORY_FILE, Paths.get(System.getProperty("user.home")+"/.jason-cli", "history"))
-                        .option(LineReader.Option.DISABLE_EVENT_EXPANSION,  true)
+                        .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true) // to not have problems is ! used by jason
                         .build();
 
                 jasonCommands.setReader(reader);
@@ -148,17 +147,21 @@ public class JasonCLI {
                 factory.setTerminal(terminal);
                 TailTipWidgets widgets = new TailTipWidgets(reader, systemRegistry::commandDescription, 5, TailTipWidgets.TipType.COMPLETER);
                 widgets.enable();
-                KeyMap<Binding> keyMap = reader.getKeyMaps().get("main");
-                keyMap.bind(new Reference("tailtip-toggle"), KeyMap.alt("s"));
+                var keyMap = reader.getKeyMaps().get("main");
+                keyMap.bind(new Reference(Widgets.TAILTIP_TOGGLE), KeyMap.alt("s"));
 
                 String prompt = "jason> ";
                 //System.out.println(terminal.getName() + ": " + terminal.getType());
-                if (terminal.getType().equals("dumb-color")) // I assume it is reading a script from a file
+                if (terminal.getType().equals("dumb-color")) // by this terminal type, I assume it is reading a script from a file
                     prompt = "";
                 else {
                     terminal.writer().println("Jason interactive shell with completion and autosuggestions.");
                     terminal.writer().println("      Hit <TAB> to see available commands.");
                     terminal.writer().println("      Press Ctrl-D to exit.");
+
+                    reader.variable(LineReader.INDENTATION, 4)
+                            .variable(LineReader.LIST_MAX, 50)   // max tab completion candidates
+                            .variable(LineReader.HISTORY_FILE, Paths.get(System.getProperty("user.home")+"/.jason-cli", "history"));
                 }
 
                 // start the shell and process input until the user quits with Ctrl-D

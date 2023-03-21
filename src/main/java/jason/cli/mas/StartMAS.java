@@ -1,6 +1,7 @@
 package jason.cli.mas;
 
 import jason.architecture.MindInspectorWeb;
+import jason.asSyntax.ASSyntax;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -52,7 +53,17 @@ public class StartMAS implements Runnable {
             parent.parent.errorMsg("there is an MAS named "+masName+" already running, select another name");
             return;
         }
-        
+
+        try {
+            if (!ASSyntax.parseTerm(masName).isAtom()) {
+                parent.parent.errorMsg("the name of the MAS should be a valid identifier, e.g., 'mas start m1'.");
+                return;
+            }
+        } catch (Exception e) {
+            parent.parent.errorMsg("the name of the MAS should be a valid identifier, e.g., 'mas start m1'.");
+            return;
+        }
+
         if (!mas2j.isEmpty()) {
             args.add(mas2j);
         } else {
@@ -83,7 +94,7 @@ public class StartMAS implements Runnable {
     }
 
     protected void showInfo(String masName, boolean console) {
-        parent.parent.println("MAS "+masName+" is running ("+parent.parent.getCmdServer().getAddress()+")");
+        parent.parent.println("MAS "+masName+" is running ("+parent.parent.getCmdServer().getAddress()+").");
         MindInspectorWeb.get(); // to start http server for jason
 //        if (console && parent.parent.isTerminal()) {
 //            parent.parent.println("\nsince the output of the MAS will be shown here, you may open another terminal to enter more commands");

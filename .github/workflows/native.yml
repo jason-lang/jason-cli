@@ -12,19 +12,19 @@ jobs:
 
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: '22.3.0'
+          version: '22.3.1'
           java-version: '17'
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
           native-image-job-reports: 'true'
 
-      - name: Build and run HelloWorld.java
+      - name: Build JasonCLI (using gradlew)
         run: |
-          ./gradlew  jar
+          ./gradlew jar
           mkdir bin
-          #echo 'public class HelloWorld { public static void main(String[] args) { System.out.println("Hello, World!"); } }' > HelloWorld.java
-          #javac HelloWorld.java
           native-image -cp "build/libs/*" jason.cli.JasonCLI -o bin/jason
+          #native-image -jar build/libs/jason-cli-all-1.0-SNAPSHOT.jar -o bin/jason
+          rm bin/jason*.txt
       
       - name: Upload binary
         uses: actions/upload-artifact@v2

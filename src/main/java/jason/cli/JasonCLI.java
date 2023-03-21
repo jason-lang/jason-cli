@@ -152,12 +152,12 @@ public class JasonCLI {
 
                 String prompt = "jason> ";
                 //System.out.println(terminal.getName() + ": " + terminal.getType());
-                if (terminal.getType().equals("dumb-color")) { // by this terminal type, I assume it is reading a script from a file
+                if (terminal.getType().startsWith("dumb")) { // by this terminal type, I assume it is reading a script from a file
                     prompt = "";
                 } else {
                     terminal.writer().println("Jason interactive shell with completion and autosuggestions.");
                     terminal.writer().println("      Hit <TAB> to see available commands.");
-                    terminal.writer().println("      Press Ctrl-D to exit.");
+                    terminal.writer().println("      Press Ctrl-D to exit."); //(terminal type="+terminal.getType()+ ")");
 
                     reader.variable(LineReader.INDENTATION, 4)
                             .variable(LineReader.LIST_MAX, 50)   // max tab completion candidates

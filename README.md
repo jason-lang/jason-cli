@@ -62,14 +62,16 @@ Create a script file, for instance, a file called `hello.jcli` with content:
 
 ```
 mas start
-agent start bob {         # starts bob with a plan
-    +hello[source(A)] <- .print("hello from ",A).
-}
+
+# starts bob with a plan
+agent start bob    { +hello[source(A)] <- .print("hello from ",A). }
+
 agent start alice
 agent run-as alice { .send(bob,tell,hello) }  # alice executes the .send...
 
+echo
 echo "beliefs of Bob:"
-agent beliefs bob         # show beliefs of bob
+agent mind bob         # show beliefs of bob
 ```
 
 then  run it with
@@ -86,21 +88,12 @@ the output in the _MAS Console_ will be:
 and the output in the terminal is:
 
 ```
-Jason interactive shell with completion and autosuggestions.
-      Hit <TAB> to see available commands.
-      Press Ctrl-D to exit.
-jason> starting MAS mas_1 ...
-MAS mas_1 is running (127.0.0.1:56149)
-jason> agent start bob {
-add: }>         +hello[source(A)] <- .print("hello from ",A).
-add: }>     }
+starting MAS mas_1 ...
+MAS mas_1 is running (127.0.0.1:59052)
 agent bob started.
-jason> agent alice started.
-jason> agent run-as alice { .send(bob,tell,hello) }
-jason>
-jason> beliefs of Bob:
-jason>     hello[source(alice)]
-jason>
+agent alice started.
+beliefs of Bob:
+    hello[source(alice)]
 <end of script>
 ```
 

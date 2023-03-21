@@ -72,8 +72,10 @@ public class RunAsAgent implements Runnable {
             while (sCmd.endsWith(";"))
                 sCmd = sCmd.substring(0,sCmd.length()-1);
 
-            sCmd += ";"+ print_unifier.class.getName();
+            sCmd += "; "+ print_unifier.class.getName();
             PlanBody  lCmd = ASSyntax.parsePlanBody(sCmd);
+
+//            parent.parent.println(lCmd.getBodyNext()+" -- "+lCmd.getBodyNext().getBodyType().getClass().getName());
             Trigger   te   = ASSyntax.parseTrigger("+!run_repl_expr");
             Intention i    = new Intention();
             i.push(new IntendedMeans(
@@ -82,7 +84,16 @@ public class RunAsAgent implements Runnable {
                             new Unifier()),
                     te));
             ag.getTS().getC().addRunningIntention(i);
+
+//            parent.parent.println("------" + ag.getTS().getAg().getPL().getAsTxt(false));
+//            parent.parent.println("------" + ag.getTS().getC().getRunningIntentions());
+//            parent.parent.println("------" + ag.getTS().getAg().getPL().getCandidatePlans(
+//                    ASSyntax.parseTrigger("+!a")
+//            ));
+
             ag.getTS().getAgArch().wake();
+
+
         } catch (Exception e) {
             parent.parent.errorMsg("Error parsing "+sCmd+"\n"+e);
         }

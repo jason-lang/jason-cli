@@ -66,9 +66,6 @@ public class JasonCLI {
 
     public void setReader(LineReader reader) {
         out = reader.getTerminal().writer();
-        out.println("Jason interactive shell with completion and autosuggestions.");
-        out.println("      Hit <TAB> to see available commands.");
-        out.println("      Press Ctrl-D to exit.");
     }
 
     private CommandServer cmdServer = null;
@@ -147,18 +144,29 @@ public class JasonCLI {
                         .build();
 
                 jasonCommands.setReader(reader);
+
                 factory.setTerminal(terminal);
                 TailTipWidgets widgets = new TailTipWidgets(reader, systemRegistry::commandDescription, 5, TailTipWidgets.TipType.COMPLETER);
                 widgets.enable();
                 KeyMap<Binding> keyMap = reader.getKeyMaps().get("main");
                 keyMap.bind(new Reference("tailtip-toggle"), KeyMap.alt("s"));
 
+                String prompt = "jason> ";
+                //System.out.println(terminal.getName() + ": " + terminal.getType());
+                if (terminal.getType().equals("dumb-color")) // I assume it is reading a script from a file
+                    prompt = "";
+                else {
+                    terminal.writer().println("Jason interactive shell with completion and autosuggestions.");
+                    terminal.writer().println("      Hit <TAB> to see available commands.");
+                    terminal.writer().println("      Press Ctrl-D to exit.");
+                }
+
                 // start the shell and process input until the user quits with Ctrl-D
                 String line;
                 while (true) {
                     try {
                         systemRegistry.cleanUp();
-                        line = reader.readLine("jason> ");
+                        line = reader.readLine(prompt).trim();
                         systemRegistry.execute(line);
                     } catch (UserInterruptException e) {
                         systemRegistry.trace(e);

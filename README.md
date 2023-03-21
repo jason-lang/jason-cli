@@ -10,7 +10,7 @@ Example of use in a terminal (`jason>` is the prompt for JasonCLI):
         !start.
         +!start <- .send(bob,tell,hello).
     }
-    jason> agent beliefs bob
+    jason> agent mind bob
         hello[source(alice)]
     jason> agent run-as bob { .send(alice,tell,hello) }
     jason> exit
@@ -89,7 +89,7 @@ and the output in the terminal is:
 
 ```
 starting MAS mas_1 ...
-MAS mas_1 is running (127.0.0.1:59052)
+MAS mas_1 is running (127.0.0.1:59052).
 agent bob started.
 agent alice started.
 beliefs of Bob:

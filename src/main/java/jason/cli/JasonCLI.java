@@ -143,8 +143,8 @@ public class JasonCLI {
                         .build();
 
                 jasonCommands.setReader(reader);
-
                 factory.setTerminal(terminal);
+
                 TailTipWidgets widgets = new TailTipWidgets(reader, systemRegistry::commandDescription, 5, TailTipWidgets.TipType.COMPLETER);
                 widgets.enable();
                 var keyMap = reader.getKeyMaps().get("main");
@@ -152,9 +152,9 @@ public class JasonCLI {
 
                 String prompt = "jason> ";
                 //System.out.println(terminal.getName() + ": " + terminal.getType());
-                if (terminal.getType().equals("dumb-color")) // by this terminal type, I assume it is reading a script from a file
+                if (terminal.getType().equals("dumb-color")) { // by this terminal type, I assume it is reading a script from a file
                     prompt = "";
-                else {
+                } else {
                     terminal.writer().println("Jason interactive shell with completion and autosuggestions.");
                     terminal.writer().println("      Hit <TAB> to see available commands.");
                     terminal.writer().println("      Press Ctrl-D to exit.");
@@ -174,7 +174,12 @@ public class JasonCLI {
                     } catch (UserInterruptException e) {
                         systemRegistry.trace(e);
                     } catch (EndOfFileException e) {
-                        terminal.writer().println("\n<end of script>");
+                        if (terminal.getType().equals("dumb-color")) {
+                            reader.getTerminal().writer().println("\n<end of script>");
+                        }
+                        if (RunningMASs.hasLocalRunningMAS()) {
+                            terminal.writer().println("an MAS is running... stop it to end this process or <CTRL>-C.");
+                        }
                         return;
                     } catch (Exception e) {
                         systemRegistry.trace(e);
@@ -195,7 +200,7 @@ class VersionProvider implements IVersionProvider {
     }
 }
 
-@Command(name = "echo")
+@Command(name = "echo",  hidden = true)
 class Echo implements Runnable {
 
     @CommandLine.ParentCommand

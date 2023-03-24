@@ -82,26 +82,11 @@ public class StartMAS implements Runnable {
             r.init(args.toArray(new String[args.size()]), masName);
             new Thread(r).start();
 
-            if (!parent.parent.hasCmdServer()) {
-                parent.parent.startCmdServer();
-            }
-            RunningMASs.storeRunningMAS(parent.parent.getCmdServer().getAddress());
-
-            showInfo(masName, console);
+            parent.parent.println("MAS "+masName+" is running.");
+            MindInspectorWeb.get(); // to start http server for jason
         } catch (Exception e) {
             e.printStackTrace();
         } 
-    }
-
-    protected void showInfo(String masName, boolean console) {
-        parent.parent.println("MAS "+masName+" is running ("+parent.parent.getCmdServer().getAddress()+").");
-        MindInspectorWeb.get(); // to start http server for jason
-//        if (console && parent.parent.isTerminal()) {
-//            parent.parent.println("\nsince the output of the MAS will be shown here, you may open another terminal to enter more commands");
-////            parent.parent.println("     jason <commands>");
-////            parent.parent.println("example:");
-////            parent.parent.println("     jason agent create bob");
-//        }
     }
 }
 

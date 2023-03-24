@@ -5,6 +5,8 @@ import jason.cli.mas.RunningMASs;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
+import java.rmi.RemoteException;
+
 
 @Command(
     name = "mind",
@@ -47,16 +49,19 @@ public class MindAgent implements Runnable {
             return;
         }
 
-        var ag = RunningMASs.getRTS(masName).getAgentSnapshot(agName);
+        try {
+            var ag = RunningMASs.getRTS(masName).getAgentSnapshot(agName);
+            if (!noBeliefs)
+                showBeliefs(ag);
 
-        if (!noBeliefs)
-            showBeliefs(ag);
+            if (plans)
+                showPlans(ag);
 
-        if (plans)
-            showPlans(ag);
-
-        if (intentions)
-            showIntentions(ag);
+            if (intentions)
+                showIntentions(ag);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     void showBeliefs(jason.asSemantics.Agent ag) {

@@ -1,10 +1,13 @@
 package jason.cli.mas;
 
+import jason.infra.local.RunLocalMAS;
 import jason.runtime.RuntimeServices;
 import jason.runtime.RuntimeServicesFactory;
 
 import java.io.*;
 import java.net.Socket;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -31,40 +34,72 @@ public class RunningMASs {
         var rt = getRTS(masName);
         if  (rt == null)
             return false;
-        else
-            return rt.isRunning();
+        else {
+            try {
+                return rt.isRunning();
+            } catch (RemoteException e) {
+                return false;
+            }
+        }
     }
 
     public static RuntimeServices getRTS(String masName) {
         if (masName == null || masName.isEmpty()) {
             return RuntimeServicesFactory.get();
         }
-        //  find remote runtime service
+        //  find remote runtime service by RMI
+        try {
+            return (RuntimeServices) LocateRegistry.getRegistry().lookup(RunLocalMAS.RMI_PREFIX_RTS+masName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
     public static boolean hasAgent(String masName, String agName) {
         var rt = getRTS(masName);
         if  (rt == null)
             return false;
-        else
-            return rt.getAgStatus(agName) != null;
+        else {
+            try {
+                return rt.getAgStatus(agName) != null;
+            } catch (RemoteException e) {
+                return false;
+            }
+        }
     }
 
     public static Map<String,String> getAllRunningMAS() {
-        var map = new HashMap<String,String>();
-        var all = testAllRemoteMAS();
+        var map = getRMIRunningMAS();
+        /*var all = testAllRemoteMAS();
         for (var mas: all.keySet()) {
             if (mas.equals("latest___mas"))
                 continue;
             map.put(mas.toString(), all.getProperty(mas.toString()));
-        }
+        }*/
         if (isRunningMAS(null)) {
             map.put(localRunningMAS.getProject().getSocName(), "local");
         }
         return map;
     }
 
-    public static Properties testAllRemoteMAS() {
+    public static Map<String,String> getRMIRunningMAS() {
+        var map = new HashMap<String, String>();
+        try {
+            var reg = LocateRegistry.getRegistry();
+            for (String r : reg.list()) {
+                if (r.startsWith(RunLocalMAS.RMI_PREFIX_RTS)) {
+                    map.put(r.substring(RunLocalMAS.RMI_PREFIX_RTS.length()).trim(), "rmi");
+                }
+            }
+        } catch (java.rmi.ConnectException e) {
+            // no rmi running, ok
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+    /*public static Properties testAllRemoteMAS() {
         var props = new Properties();
         var f = getRunningMASFile();
         if (f.exists()) {
@@ -113,13 +148,13 @@ public class RunningMASs {
             }
         }
         return props;
-    }
+    }*/
 
-    public static File getRunningMASFile() {
+    /*public static File getRunningMASFile() {
         return new File(System.getProperty("java.io.tmpdir") + RUNNING_MAS_FILE_NAME);
-    }
+    }*/
 
-    public static Socket getRemoteRunningMAS(String masName) {
+    /*public static Socket getRemoteRunningMAS(String masName) {
         var props = new Properties();
         var f = getRunningMASFile();
         if (f.exists()) {
@@ -147,9 +182,9 @@ public class RunningMASs {
             }
         }
         return null;
-    }
+    }*/
 
-    public static File storeRunningMAS(String address) {
+    /*public static File storeRunningMAS() {
         if (localRunningMAS == null)
             return null;
         try {
@@ -159,8 +194,7 @@ public class RunningMASs {
             if (f.exists()) {
                 props.load(new FileReader(f));
             }
-            var masName = localRunningMAS.getProject().getSocName();
-            props.put(masName, address);
+            var masName = localRunningMAS.getName();
             props.put("latest___mas", masName);
             props.store(new FileWriter(f),"running mas in jason");
             // System.out.println("store server data in "+f.getAbsolutePath());
@@ -169,7 +203,7 @@ public class RunningMASs {
             e.printStackTrace();
             return null;
         }
-    }
+    }*/
 
 }
 

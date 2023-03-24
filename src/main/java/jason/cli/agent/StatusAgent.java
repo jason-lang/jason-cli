@@ -4,6 +4,9 @@ import jason.cli.mas.RunningMASs;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
+import java.rmi.RemoteException;
+import java.util.Map;
+
 
 @Command(
     name = "status",
@@ -37,9 +40,12 @@ public class StatusAgent implements Runnable {
             return;
         }
 
-        var status = RunningMASs.getRTS(masName).getAgStatus(agName);
-        for (var k : status.keySet()) {
-            parent.parent.println("    " + k + ": " + status.get(k));
+        try {
+            var status = RunningMASs.getRTS(masName).getAgStatus(agName);
+            for (var k : status.keySet()) {
+                parent.parent.println("    " + k + ": " + status.get(k));
+            }
+        } catch (RemoteException e) {
         }
     }
 }

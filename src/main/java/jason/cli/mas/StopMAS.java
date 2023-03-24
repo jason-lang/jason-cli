@@ -41,24 +41,33 @@ public class StopMAS implements Runnable {
             }
             return;
         } else {
-            var s = RunningMASs.getRemoteRunningMAS(masName);
-            if (s != null) {
-                parent.parent.println("(trying to) stop MAS "+masName+" at "+s);
-
-                try (var out = new PrintWriter(s.getOutputStream(), true)) {
-                    if (exit)
-                        out.println("exit");
-                    else
-                        out.println("mas stop");
-
-                    var in  = new BufferedReader(new InputStreamReader(s.getInputStream()));
-                    parent.parent.println(in.readLine());
-                    s.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+            var rt = RunningMASs.getRTS(masName);
+            if (rt != null) {
+                try {
+                    rt.stopMAS(0,exit, 0);
+                    return;
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
-                return;
             }
+//            var s = RunningMASs.getRemoteRunningMAS(masName);
+//            if (s != null) {
+//                parent.parent.println("(trying to) stop MAS "+masName+" at "+s);
+//
+//                try (var out = new PrintWriter(s.getOutputStream(), true)) {
+//                    if (exit)
+//                        out.println("exit");
+//                    else
+//                        out.println("mas stop");
+//
+//                    var in  = new BufferedReader(new InputStreamReader(s.getInputStream()));
+//                    parent.parent.println(in.readLine());
+//                    s.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                return;
+//            }
         }
 
         parent.parent.errorMsg("could not find an MAS to stop, run 'mas list' to see the list of running MAS.");

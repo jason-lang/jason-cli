@@ -110,5 +110,5 @@ task copyScriptsToBuild (dependsOn: 'uberJar') {
 
 
 //build.dependsOn(copyJarsToBuild)
-build.dependsOn(uberJar)
+//build.dependsOn(uberJar)
 build.dependsOn(copyScriptsToBuild)

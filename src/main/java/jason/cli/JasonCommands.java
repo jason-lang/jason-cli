@@ -1,31 +1,14 @@
 package jason.cli;
 
 import jason.cli.agent.Agent;
-import jason.cli.mas.CommandServer;
 import jason.cli.mas.MAS;
-import jason.cli.mas.RunningMASs;
 import jason.util.Config;
-import org.fusesource.jansi.AnsiConsole;
-import org.jline.builtins.ConfigurationPath;
-import org.jline.console.SystemRegistry;
-import org.jline.console.impl.SystemRegistryImpl;
-import org.jline.keymap.KeyMap;
-import org.jline.reader.*;
-import org.jline.reader.impl.DefaultParser;
-import org.jline.reader.impl.DefaultParser.Bracket;
-import org.jline.terminal.TerminalBuilder;
-import org.jline.widget.TailTipWidgets;
-import org.jline.widget.Widgets;
+import org.jline.reader.LineReader;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.IVersionProvider;
-import picocli.shell.jline3.PicocliCommands;
-import picocli.shell.jline3.PicocliCommands.PicocliCommandsFactory;
 
 import java.io.PrintWriter;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.function.Supplier;
 
 // program "inspired" by https://github.com/remkop/picocli/tree/v4.7.1/picocli-shell-jline3
 
@@ -68,31 +51,6 @@ public class JasonCommands {
     public void setReader(LineReader reader) {
         out = reader.getTerminal().writer();
     }
-
-    private CommandServer cmdServer = null;
-
-    public boolean hasCmdServer() {
-        return cmdServer != null;
-    }
-
-    public void startCmdServer() {
-         cmdServer = new CommandServer();
-         new Thread(cmdServer).start();
-    }
-
-    public CommandServer getCmdServer() {
-        return cmdServer;
-    }
-
-//        public void run() {
-//            System.out.println(new CommandLine(this).getUsageMessage());
-//            CommandLine.ParseResult pr = spec.commandLine().getParseResult();
-//            System.out.println("o="+pr.originalArgs());
-//            System.out.println("m="+pr.matchedArgs());
-//            System.out.println("e="+pr.expandedArgs());
-//            startTerminal();
-//        }
-//    }
 }
    
 class VersionProvider implements IVersionProvider {

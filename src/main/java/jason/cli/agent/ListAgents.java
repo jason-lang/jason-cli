@@ -4,6 +4,8 @@ import jason.cli.mas.RunningMASs;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
+import java.rmi.RemoteException;
+
 
 @Command(
     name = "list",
@@ -22,8 +24,11 @@ public class ListAgents implements Runnable {
         if (!RunningMASs.isRunningMAS(masName))
             return;
 
-        for  (var ag: RunningMASs.getRTS(masName).getAgentsNames()) {
-            parent.parent.println("    "+ag);
+        try {
+            for  (var ag: RunningMASs.getRTS(masName).getAgentsNames()) {
+                parent.parent.println("    "+ag);
+            }
+        } catch (RemoteException e) {
         }
     }
 }

@@ -5,6 +5,8 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
+import java.rmi.RemoteException;
+
 
 @Command(
     name = "stop",
@@ -38,7 +40,11 @@ public class StopAgent implements Runnable {
             parent.parent.errorMsg("the agent with name " + agName + " is not running!");
             return;
         }
-        RunningMASs.getRTS(masName).killAgent(agName, null, 0);
+        try {
+            RunningMASs.getRTS(masName).killAgent(agName, null, 0);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

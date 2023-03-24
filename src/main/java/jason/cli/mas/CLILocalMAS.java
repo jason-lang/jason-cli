@@ -12,6 +12,8 @@ public class CLILocalMAS extends RunLocalMAS implements Runnable {
         if (project.getSocName() == null || project.getSocName().isEmpty() || project.getSocName().equals("default"))
             project.setSocName(masName);
         registerMBean();
+        registerInRMI();
+
         create();
         return r;
     }

@@ -7,6 +7,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 import java.io.StringReader;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,8 +91,12 @@ public class StartAgent implements Runnable {
                 }
             }
 
-            rt.startAgent(a);
-            parent.parent.println("agent " + a + " started.");
+            try {
+                rt.startAgent(a);
+                parent.parent.println("agent " + a + " started.");
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

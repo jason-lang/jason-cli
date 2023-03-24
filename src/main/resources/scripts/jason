@@ -4,10 +4,10 @@ if [ -z "$JASON_CLI_HOME" ] ; then
     CURDIR="`pwd`"
     P=`which "$0"`
     JASON_CLI_HOME="`dirname $P`"
-    cd "$JASON_CLI_HOME/.."
+    cd $JASON_CLI_HOME
     JASON_CLI_HOME="`pwd`"
     #echo "JASON_CLI_HOME set to $JASON_CLI_HOME"
     cd "$CURDIR"
 fi
 
-java -cp "$JASON_CLI_HOME/libs/*" jason.cli.JasonCLI $*
+java -cp "$JASON_CLI_HOME/*" jason.cli.JasonCLI $*

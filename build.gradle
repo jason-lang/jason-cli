@@ -50,26 +50,16 @@ compileJava {
 }
 
 // copy dep jars into build directory
-task copyJarsToBuild {
-    inputs.files configurations.runtimeClasspath.files
-    outputs.dir  'build/libs'
-    doLast {
-        copy {
-            from configurations.runtimeClasspath
-            into 'build/libs'
-        }
-    }
-}
-
-task copyScriptsToBuild {
-    doLast {
-        copy {
-            from 'src/main/resources/scripts'
-            into 'build/scripts'
-            include '**'
-        }
-    }
-}
+//task copyJarsToBuild {
+//    inputs.files configurations.runtimeClasspath.files
+//    outputs.dir  'build/libs'
+//    doLast {
+//        copy {
+//            from configurations.runtimeClasspath
+//            into 'build/libs'
+//        }
+//    }
+//}
 
 jar {
     archiveBaseName = 'jason-cli'
@@ -80,9 +70,6 @@ jar {
                    'Implementation-Version': new Date().toString()
     }
 }
-
-build.dependsOn(copyJarsToBuild)
-build.dependsOn(copyScriptsToBuild)
 
 task run (type: JavaExec, dependsOn: 'build') {
     mainClass = 'jason.cli.JasonCLI'
@@ -106,6 +93,22 @@ task uberJar(type: Jar, dependsOn: 'classes') {
                    'Implementation-Version': new Date().toString()
     }
     archiveBaseName = 'jason-cli-all'
+    destinationDirectory = file('build/scripts')
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
+
+task copyScriptsToBuild (dependsOn: 'uberJar') {
+    doLast {
+        copy {
+            from 'src/main/resources/scripts'
+            into 'build/scripts'
+            include '**'
+        }
+    }
+}
+
+
+//build.dependsOn(copyJarsToBuild)
+build.dependsOn(uberJar)
+build.dependsOn(copyScriptsToBuild)

@@ -112,6 +112,13 @@ In another terminal:
     $ jason mas list
     $ jason mas stop --mas-name=m1 --exit
 
+Agent commands:
 
-(commands for agents are in ToDo)
+    $ jason agent start  bob   --mas-name=mas_1
+    $ echo "\!s. +\!s <- .send(bob,tell,hello)." > x.asl
+    $ jason agent start  alice --mas-name=mas_1 --source=x.asl
+    $ jason agent list         --mas-name=mas_1
+    $ jason agent status bob   --mas-name=mas_1
+    $ jason agent mind   bob   --mas-name=mas_1
+    $ jason agent mind alice   --mas-name=mas_1 --plans
 

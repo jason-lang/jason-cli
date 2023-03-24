@@ -36,7 +36,7 @@ public class StartMAS implements Runnable {
 
     @Override
     public void run() {
-        if (RunningMASs.hasLocalRunningMAS()) {
+        if (RunningMASs.getLocalRunningMAS() != null) {
             parent.parent.errorMsg("this process can run only one MAS, that currently is "+RunningMASs.getLocalRunningMAS().getName());
             parent.parent.errorMsg("open another terminal for the new MAS, or stop the current one with 'mas stop'");
             return;

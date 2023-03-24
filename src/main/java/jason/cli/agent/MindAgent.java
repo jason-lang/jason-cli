@@ -29,10 +29,12 @@ public class MindAgent implements Runnable {
     @CommandLine.Option(names = { "--intentions" }, defaultValue = "false", description = "show intentions")
     boolean intentions;
 
+    @CommandLine.Option(names = { "--mas-name" }, paramLabel = "<mas name>", defaultValue = "", description = "MAS unique identification")
+    String masName;
 
     @Override
     public void run() {
-        if (!RunningMASs.hasLocalRunningMAS()) {
+        if (!RunningMASs.isRunningMAS(masName)) {
             parent.parent.errorMsg("no running MAS, so, no agent to inspect.");
             return;
         }
@@ -40,12 +42,12 @@ public class MindAgent implements Runnable {
             parent.parent.errorMsg("the name of the agent should be informed, e.g., 'agent mind bob'.");
             return;
         }
-        if (RunningMASs.getLocalRunningMAS().getAg(agName) == null) {
+        if (!RunningMASs.hasAgent(masName, agName)) {
             parent.parent.errorMsg("the agent with name " + agName + " is not running!");
             return;
         }
 
-        var ag = RunningMASs.getLocalRunningMAS().getAg(agName).getTS().getAg();
+        var ag = RunningMASs.getRTS(masName).getAgentSnapshot(agName);
 
         if (!noBeliefs)
             showBeliefs(ag);

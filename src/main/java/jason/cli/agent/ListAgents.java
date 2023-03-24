@@ -1,6 +1,5 @@
 package jason.cli.agent;
 
-import jason.cli.mas.MAS;
 import jason.cli.mas.RunningMASs;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -15,14 +14,15 @@ public class ListAgents implements Runnable {
     @CommandLine.ParentCommand
     protected Agent parent;
 
+    @CommandLine.Option(names = { "--mas-name" }, paramLabel = "<mas name>", defaultValue = "", description = "MAS unique identification")
+    String masName;
+
     @Override
     public void run() {
-        if (!RunningMASs.hasLocalRunningMAS())
+        if (!RunningMASs.isRunningMAS(masName))
             return;
 
-        var all = RunningMASs.getLocalRunningMAS();
-        //parent.parent.println("agents:");
-        for  (var ag: all.getAgs().keySet()) {
+        for  (var ag: RunningMASs.getRTS(masName).getAgentsNames()) {
             parent.parent.println("    "+ag);
         }
     }

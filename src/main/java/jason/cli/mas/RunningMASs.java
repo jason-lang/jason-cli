@@ -1,5 +1,8 @@
 package jason.cli.mas;
 
+import jason.runtime.RuntimeServices;
+import jason.runtime.RuntimeServicesFactory;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
@@ -24,6 +27,29 @@ public class RunningMASs {
         return  localRunningMAS != null && localRunningMAS.isRunning();
     }
 
+    public static boolean isRunningMAS(String masName) {
+        var rt = getRTS(masName);
+        if  (rt == null)
+            return false;
+        else
+            return rt.isRunning();
+    }
+
+    public static RuntimeServices getRTS(String masName) {
+        if (masName == null || masName.isEmpty()) {
+            return RuntimeServicesFactory.get();
+        }
+        //  find remote runtime service
+        return null;
+    }
+    public static boolean hasAgent(String masName, String agName) {
+        var rt = getRTS(masName);
+        if  (rt == null)
+            return false;
+        else
+            return rt.getAgStatus(agName) != null;
+    }
+
     public static Map<String,String> getAllRunningMAS() {
         var map = new HashMap<String,String>();
         var all = testAllRemoteMAS();
@@ -32,7 +58,7 @@ public class RunningMASs {
                 continue;
             map.put(mas.toString(), all.getProperty(mas.toString()));
         }
-        if (hasLocalRunningMAS()) {
+        if (isRunningMAS(null)) {
             map.put(localRunningMAS.getProject().getSocName(), "local");
         }
         return map;
@@ -49,7 +75,7 @@ public class RunningMASs {
             }
             boolean changed = false;
             var localMAS = "";
-            if (hasLocalRunningMAS())
+            if (localRunningMAS != null)
                 localMAS = localRunningMAS.getProject().getSocName();
             for (var masName: props.keySet()) {
                 if (masName.equals(localMAS))
@@ -124,7 +150,7 @@ public class RunningMASs {
     }
 
     public static File storeRunningMAS(String address) {
-        if (!hasLocalRunningMAS())
+        if (localRunningMAS == null)
             return null;
         try {
             var props = new Properties();

@@ -1,6 +1,6 @@
 package jason.cli.mas;
 
-import jason.cli.JasonCLI;
+import jason.cli.JasonCommands;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -13,7 +13,7 @@ import picocli.CommandLine.Command;
 public class MAS {
 
     @CommandLine.ParentCommand
-    protected JasonCLI parent;
+    protected JasonCommands parent;
 
 }
 

@@ -1,13 +1,9 @@
 package jason.cli.agent;
 
 import jason.cli.mas.RunningMASs;
-import jason.runtime.RuntimeServicesFactory;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Command(
@@ -20,12 +16,16 @@ public class StopAgent implements Runnable {
                arity = "1",
                description = "agent unique identification")
     String agName;
+
+    @CommandLine.Option(names = { "--mas-name" }, paramLabel = "<mas name>", defaultValue = "", description = "MAS unique identification")
+    String masName;
+
     @CommandLine.ParentCommand
     protected Agent parent;
 
     @Override
     public void run() {
-        if (!RunningMASs.hasLocalRunningMAS()) {
+        if (!RunningMASs.isRunningMAS(masName)) {
             parent.parent.errorMsg("no running MAS, so, no agent to kill.");
             return;
         }
@@ -33,18 +33,12 @@ public class StopAgent implements Runnable {
             parent.parent.errorMsg("the name of the agent should be informed, e.g., 'agent stop bob'.");
             return;
         }
-        if (RunningMASs.getLocalRunningMAS().getAg(agName) == null) {
+
+        if (!RunningMASs.hasAgent(masName, agName)) {
             parent.parent.errorMsg("the agent with name " + agName + " is not running!");
             return;
         }
-
-
-        var rt =  RuntimeServicesFactory.get();
-        if (!rt.getAgentsNames().contains(agName)) {
-            parent.parent.errorMsg("there is no agent named "+agName+" running.");
-            return;
-        }
-        rt.killAgent(agName, null, 0);
+        RunningMASs.getRTS(masName).killAgent(agName, null, 0);
     }
 }
 

@@ -16,8 +16,7 @@ import java.io.PrintWriter;
 )
 public class StopMAS implements Runnable {
     
-    @Option(names = { "--mas-name" }, paramLabel = "<mas name>", defaultValue = "", 
-               description = "MAS unique identification")
+    @Option(names = { "--mas-name" }, paramLabel = "<mas name>", defaultValue = "", description = "MAS unique identification")
     String masName;
 
     @Option(names = { "--exit" }, description = "stops the MAS and terminates the process")
@@ -28,13 +27,13 @@ public class StopMAS implements Runnable {
 
     @Override
     public void run() {
-        if (masName.isEmpty() && RunningMASs.hasLocalRunningMAS() ||
-                RunningMASs.hasLocalRunningMAS() && RunningMASs.getLocalRunningMAS().getName().equals(masName)) {
+        if (masName.isEmpty() && RunningMASs.isRunningMAS(null) ||
+                RunningMASs.isRunningMAS(null) && RunningMASs.getLocalRunningMAS().getName().equals(masName)) {
             // stop the local running MAS
             var localMAS = RunningMASs.getLocalRunningMAS();
             if (exit || !parent.parent.isTerminal()) {
-                localMAS.finish();
                 parent.parent.println(localMAS.getName()+" stopped");
+                localMAS.finish();
                 System.exit(0);
             } else {
                 localMAS.finish(0, false, 0);
@@ -64,7 +63,6 @@ public class StopMAS implements Runnable {
 
         parent.parent.errorMsg("could not find an MAS to stop, run 'mas list' to see the list of running MAS.");
     }
-
 
 }
 

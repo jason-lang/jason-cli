@@ -1,6 +1,6 @@
 package jason.cli.agent;
 
-import jason.cli.JasonCLI;
+import jason.cli.JasonCommands;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -13,7 +13,7 @@ import picocli.CommandLine.Command;
 public class Agent {
 
     @CommandLine.ParentCommand
-    protected JasonCLI parent;
+    protected JasonCommands parent;
 
 }
 

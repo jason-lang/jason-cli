@@ -37,14 +37,14 @@ public class RunAsAgent implements Runnable {
     @Override
     public void run() {
         if (!RunningMASs.hasLocalRunningMAS()) {
-            parent.parent.errorMsg("no running MAS, so, no agent to run.");
+            parent.parent.errorMsg("no local running MAS, so, no agent to run the commands.");
             return;
         }
         if (agName.isEmpty()) {
             parent.parent.errorMsg("the name of the agent should be informed, e.g., 'agent run-as bob { .print(oi) }'.");
             return;
         }
-        if (RunningMASs.getLocalRunningMAS().getAg(agName) == null) {
+        if (!RunningMASs.hasAgent(null, agName)) {
             parent.parent.errorMsg("the agent with name " + agName + " is not running!");
             return;
         }

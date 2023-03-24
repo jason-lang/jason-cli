@@ -49,17 +49,20 @@ compileJava {
     options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
 }
 
-// copy dep jars and scritps into build directory
+// copy dep jars into build directory
 task copyJarsToBuild {
     inputs.files configurations.runtimeClasspath.files
-    inputs.dir   'src/main/resources/scripts'
     outputs.dir  'build/libs'
-    outputs.dir  'build/scripts'
     doLast {
         copy {
             from configurations.runtimeClasspath
             into 'build/libs'
         }
+    }
+}
+
+task copyScriptsToBuild {
+    doLast {
         copy {
             from 'src/main/resources/scripts'
             into 'build/scripts'
@@ -77,7 +80,20 @@ jar {
                    'Implementation-Version': new Date().toString()
     }
 }
-jar.dependsOn(copyJarsToBuild)
+
+build.dependsOn(copyJarsToBuild)
+build.dependsOn(copyScriptsToBuild)
+
+task run (type: JavaExec, dependsOn: 'build') {
+    mainClass = 'jason.cli.JasonCLI'
+    standardInput = System.in
+    //args '<PROJECT-FILE>'
+    // options:
+    //     args = ['<PROJECT-FILE>', '--debug']
+    //     args = ['<PROJECT-FILE>', '--log-conf', 'l.p'] // to use file l.p to configure logging
+    classpath sourceSets.main.runtimeClasspath
+}
+
 
 task uberJar(type: Jar, dependsOn: 'classes') {
     description 'creates a single runnable jar file with all dependencies'

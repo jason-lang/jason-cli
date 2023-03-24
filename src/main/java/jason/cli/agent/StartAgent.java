@@ -2,7 +2,6 @@ package jason.cli.agent;
 
 import jason.asSyntax.ASSyntax;
 import jason.cli.mas.RunningMASs;
-import jason.runtime.RuntimeServicesFactory;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
@@ -29,6 +28,9 @@ public class StartAgent implements Runnable {
     @CommandLine.Option(names = { "--source" }, defaultValue = "", paramLabel = "<source file>", description = "file (or URL) for the source code of the agent.")
     String sourceFile;
 
+    @CommandLine.Option(names = { "--mas-name" }, paramLabel = "<mas name>", defaultValue = "", description = "MAS unique identification")
+    String masName;
+
     @Parameters(hidden = true)  // "hidden": don't show this parameter in usage help message
     List<String> allParameters; // no "index" attribute: captures _all_ arguments
 
@@ -37,7 +39,7 @@ public class StartAgent implements Runnable {
 
     @Override
     public void run() {
-        if (!RunningMASs.hasLocalRunningMAS()) {
+        if (!RunningMASs.isRunningMAS(masName)) {
             parent.parent.errorMsg("no running MAS, create one with 'mas start'.");
             return;
         }
@@ -64,7 +66,7 @@ public class StartAgent implements Runnable {
         }
 
         var ags = new ArrayList<String>();
-        var rt =  RuntimeServicesFactory.get();
+        var rt =  RunningMASs.getRTS(masName);
         try {
             for (int i=0; i<instances; i++) {
                 var n = agName;
@@ -82,10 +84,7 @@ public class StartAgent implements Runnable {
             if (code != null && !code.isEmpty()) {
                 //parent.parent.println("code is |"+code+"|");
                 try {
-                    var ag = RunningMASs.getLocalRunningMAS().getAg(a).getTS().getAg();
-                    ag.parseAS(new StringReader(code),"jasonCLI-parameter");
-                    ag.addInitialBelsInBB();
-                    ag.addInitialGoalsInTS();
+                    rt.loadASL(agName, code, "jasonCLI-parameter");
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }

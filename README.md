@@ -36,7 +36,7 @@ Java 17 is required.
 
     git clone https://github.com/jason-lang/jason-cli.git
     cd jason-cli
-    ./gradlew jar
+    ./gradlew build
     export PATH=`pwd`/build/scripts:$PATH
 
 These commands will: download JasonCLI, build it, and add `jason` command in the `PATH`. 

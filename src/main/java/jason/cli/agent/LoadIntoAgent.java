@@ -41,7 +41,7 @@ public class LoadIntoAgent implements Runnable {
             return;
         }
         if (agName.isEmpty()) {
-            parent.parent.errorMsg("the name of the new agent should be informed, e.g., 'agent start bob'.");
+            parent.parent.errorMsg("the name of the new agent should be informed, e.g., 'agent load-into bob'.");
             return;
         }
         if (!RunningMASs.hasAgent(masName, agName)) {
@@ -75,6 +75,8 @@ public class LoadIntoAgent implements Runnable {
         try {
             if (code != null && (code.length() > 0)) {
                 RunningMASs.getRTS(masName).loadASL(agName, code.toString(), "jasonCLI-parameter");
+            } else {
+                parent.parent.errorMsg("no code informed. E.g.: agent load-into bob { +!g <- .print(ok). }");
             }
         } catch (RemoteException e) {
             throw new RuntimeException(e);

@@ -28,6 +28,9 @@ public class JasonCLI {
     public static void main(String[] args) {
         if (args.length == 0) {
             startTerminal();
+        } else if (args.length == 1 && args[0].endsWith(".mas2j")) {
+            // case of .mas2j
+            jason.runtime.RunJasonProject.main(args);
         } else {
             int exitCode = new CommandLine(new JasonCommands()).execute(args);
             if (!RunningMASs.hasLocalRunningMAS())

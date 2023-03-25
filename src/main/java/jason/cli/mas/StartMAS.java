@@ -1,6 +1,5 @@
 package jason.cli.mas;
 
-import jason.architecture.MindInspectorWeb;
 import jason.asSyntax.ASSyntax;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -23,13 +22,11 @@ public class StartMAS implements Runnable {
                description = "MAS unique identification")
     String masName;
 
-    @Option(names = { "--console" }, negatable = true, description = "output will be sent to the console instead of a GUI")
+    @Option(names = { "--console" }, defaultValue = "false", description = "output will be sent to the console instead of a GUI")
     boolean console;
 
-    @Option(names = "--mas2j", 
-                paramLabel = "<mas2j file>", defaultValue = "",
-                description = "mas2j file describing the initial state of the MAS")
-    String mas2j;
+    @Option(names = { "--no-net" }, defaultValue = "false", description = "disable all net services (mind inspector, runtime services, Mbeans, ...")
+    boolean noNet;
 
     @CommandLine.ParentCommand
     protected MAS parent;
@@ -64,26 +61,26 @@ public class StartMAS implements Runnable {
             return;
         }
 
-        if (!mas2j.isEmpty()) {
-            args.add(mas2j);
-        } else {
-            args.add("--empty-mas");
-        }
+        args.add("--empty-mas");
 
         if (console) {
             args.add("--log-conf");
             args.add("$jasonJar/templates/console-logging.properties");
         }
+        if (noNet) {
+            args.add("--no-net");
+        }
 
         try {
             parent.parent.println("starting MAS "+masName+" ...");
+            if (args.size() > 1)
+                parent.parent.println("         "+args);
 
             var r = new CLILocalMAS();
             r.init(args.toArray(new String[args.size()]), masName);
             new Thread(r).start();
 
             parent.parent.println("MAS "+masName+" is running.");
-            MindInspectorWeb.get(); // to start http server for jason
         } catch (Exception e) {
             e.printStackTrace();
         } 

@@ -1,7 +1,11 @@
-mas start --console
+mas start --console --no-net
+
 #agent start --source=src/test/jason/plan.asl bob
-agent start bob { +!a <- +b; .println("***** oi"). }
+agent start bob { +!a <- +b; .println("***** hello *****"). }
 agent run-as bob { +c; !a; }
-#agent mind --intentions --plans bob
-#agent status bob
-#mas stop --exit
+
+wait 2000
+echo "Bob beliefs and plans:"
+agent mind --intentions --plans bob
+
+mas stop --exit

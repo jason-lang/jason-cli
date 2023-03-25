@@ -76,11 +76,12 @@ public class RunAsAgent implements Runnable {
             PlanBody  lCmd = ASSyntax.parsePlanBody(sCmd);
 
 //            parent.parent.println(lCmd.getBodyNext()+" -- "+lCmd.getBodyNext().getBodyType().getClass().getName());
-            Trigger   te   = ASSyntax.parseTrigger("+!run_repl_expr");
-            Intention i    = new Intention();
+            var te   = ASSyntax.parseTrigger("+!run_repl_expr");
+            var i    = new Intention();
+            var plan =  new Plan(null,te,null,lCmd);
             i.push(new IntendedMeans(
                     new Option(
-                            new Plan(null,te,null,lCmd),
+                            plan,
                             new Unifier()),
                     te));
             ag.getTS().getC().addRunningIntention(i);

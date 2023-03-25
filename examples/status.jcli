@@ -1,4 +1,4 @@
-mas start --console
+mas start --console --no-net
 agent start bob {
     p(1). p(2).
     !g.

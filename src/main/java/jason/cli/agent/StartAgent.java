@@ -6,7 +6,6 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
-import java.io.StringReader;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +82,6 @@ public class StartAgent implements Runnable {
         for (String a: ags) {
             // load code informed as parameter
             if (code != null && !code.isEmpty()) {
-                //parent.parent.println("code is |"+code+"|");
                 try {
                     rt.loadASL(agName, code, "jasonCLI-parameter");
                 } catch (Exception e) {

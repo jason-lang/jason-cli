@@ -1,13 +1,9 @@
 package jason.cli.mas;
 
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ParentCommand;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 
 
 @Command(
@@ -16,11 +12,20 @@ import java.io.PrintWriter;
 )
 public class StopMAS implements Runnable {
     
-    @Option(names = { "--mas-name" }, paramLabel = "<mas name>", defaultValue = "", description = "MAS unique identification")
+
+    @CommandLine.Parameters(paramLabel = "<mas name>", defaultValue = "",
+            arity = "0..1",
+            description = "MAS unique identification")
     String masName;
+
 
     @Option(names = { "--exit" }, description = "stops the MAS and terminates the process")
     boolean exit;
+
+    @Option(names = "--deadline",
+            paramLabel = "<deadline>", defaultValue = "0",
+            description = "the amount of time (in milliseconds) to wait for stopping the MAS")
+    int deadline;
 
     @ParentCommand
     private MAS parent;
@@ -33,10 +38,10 @@ public class StopMAS implements Runnable {
             var localMAS = RunningMASs.getLocalRunningMAS();
             if (exit || !parent.parent.isTerminal()) {
                 parent.parent.println(localMAS.getName()+" stopped");
-                localMAS.finish();
+                localMAS.finish(deadline, true, 0);
                 System.exit(0);
             } else {
-                localMAS.finish(0, false, 0);
+                localMAS.finish(deadline, false, 0);
                 parent.parent.println(localMAS.getName()+" stopped");
             }
             return;
@@ -44,32 +49,13 @@ public class StopMAS implements Runnable {
             var rt = RunningMASs.getRTS(masName);
             if (rt != null) {
                 try {
-                    rt.stopMAS(0,exit, 0);
+                    rt.stopMAS(deadline, exit, 0);
                     return;
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
-//            var s = RunningMASs.getRemoteRunningMAS(masName);
-//            if (s != null) {
-//                parent.parent.println("(trying to) stop MAS "+masName+" at "+s);
-//
-//                try (var out = new PrintWriter(s.getOutputStream(), true)) {
-//                    if (exit)
-//                        out.println("exit");
-//                    else
-//                        out.println("mas stop");
-//
-//                    var in  = new BufferedReader(new InputStreamReader(s.getInputStream()));
-//                    parent.parent.println(in.readLine());
-//                    s.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                return;
-//            }
         }
-
         parent.parent.errorMsg("could not find an MAS to stop, run 'mas list' to see the list of running MAS.");
     }
 

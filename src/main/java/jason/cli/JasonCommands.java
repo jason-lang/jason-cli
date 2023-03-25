@@ -16,7 +16,7 @@ import java.io.PrintWriter;
         // version = "1.0",
         versionProvider = jason.cli.VersionProvider.class,
         mixinStandardHelpOptions = true,
-        subcommands = {  MAS.class, Agent.class, Echo.class },
+        subcommands = {  MAS.class, Agent.class, Echo.class, Wait.class },
         synopsisSubcommandLabel = "(mas | agent)"
 )
 public class JasonCommands {
@@ -71,5 +71,22 @@ class Echo implements Runnable {
     @Override
     public void run() {
         parent.println(msg);
+    }
+}
+@Command(name = "wait",  hidden = true)
+class Wait implements Runnable {
+
+    @CommandLine.ParentCommand
+    protected JasonCommands parent;
+
+    @CommandLine.Parameters(paramLabel = "<time in ms>", defaultValue = "1000")
+    int time;
+
+    @Override
+    public void run() {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+        }
     }
 }

@@ -49,7 +49,7 @@ public class LoadIntoAgent implements Runnable {
             return;
         }
 
-        StringBuilder code = null;
+        var code = new StringBuilder();
         if (allParameters.size()>0) {
             var last = allParameters.get( allParameters.size()-1).trim();
             if (last.startsWith("{")) {

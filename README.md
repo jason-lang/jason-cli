@@ -112,7 +112,7 @@ In another terminal:
 In another terminal:
 
     $ jason mas list
-    $ jason mas stop --mas-name=m1 --exit
+    $ jason mas stop m1 --exit
 
 Agent commands:
 
@@ -122,5 +122,8 @@ Agent commands:
     $ jason agent list         --mas-name=mas_1
     $ jason agent status bob   --mas-name=mas_1
     $ jason agent mind   bob   --mas-name=mas_1
+    
+    $ echo "+b <- .print(perceived(b))." > y.asl
+    $ jason agent load-into alice --mas-name=mas_1 --source=y.asl
     $ jason agent mind alice   --mas-name=mas_1 --plans
 

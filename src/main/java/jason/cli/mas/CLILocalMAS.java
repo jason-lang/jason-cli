@@ -38,11 +38,15 @@ public class CLILocalMAS extends RunLocalMAS implements Runnable {
     public void finish() {
         super.finish();
         RunningMASs.setLocalRunningMAS(null);
+        System.out.println(getName()+" stopped");
     }
 
     @Override
     public void finish(int deadline, boolean stopJVM, int exitValue) {
+        if (deadline != 0)
+            System.out.println("Stopping "+getName()+" in "+deadline+" ms...");
         super.finish(deadline, stopJVM, exitValue);
         RunningMASs.setLocalRunningMAS(null);
+        System.out.println(getName()+" stopped");
     }
 }

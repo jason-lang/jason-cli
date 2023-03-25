@@ -13,7 +13,7 @@ import java.util.List;
 
 @Command(
     name = "load-into",
-    description = "load some ASL code into a running agent"
+    description = "loads some ASL code into a running agent"
 )
 public class LoadIntoAgent implements Runnable {
     

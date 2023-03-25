@@ -16,7 +16,7 @@ commands to handle running Multi-Agent Systems
 Sub-commands:
   start  starts a new (empty) MAS
   stop   stops a MAS
-  list   list current running MAS
+  list   lists current running MAS
 ```
 ### MAS start
 
@@ -51,11 +51,11 @@ commands to handle agents
 Commands:
   start      starts a new (empty) agent
   stop       kills an agent
-  list       list running agents
-  run-as     execute commands for an agent
-  mind       inspect the mind of an agent
-  status     show the status of an agent
-  load-into  load some ASL code into a running agent
+  list       lists running agents
+  run-as     executes commands for an agent
+  mind       inspects the mind of an agent
+  status     shows the status of an agent
+  load-into  loads some ASL code into a running agent
 ```
 
 

@@ -10,7 +10,7 @@ import java.rmi.RemoteException;
 
 @Command(
     name = "mind",
-    description = "inspect the mind of an agent"
+    description = "inspects the mind of an agent"
 )
 public class MindAgent implements Runnable {
 

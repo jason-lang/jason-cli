@@ -19,7 +19,7 @@ import java.util.List;
 
 @Command(
     name = "run-as",
-    description = "execute commands for an agent"
+    description = "executes commands for an agent"
 )
 public class RunAsAgent implements Runnable {
 

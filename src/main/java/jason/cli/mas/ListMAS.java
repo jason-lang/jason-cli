@@ -6,7 +6,7 @@ import picocli.CommandLine.Command;
 
 @Command(
     name = "list",
-    description = "list current running MAS"
+    description = "lists current running MAS"
 )
 public class ListMAS implements Runnable {
 

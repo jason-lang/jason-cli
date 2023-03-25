@@ -9,7 +9,7 @@ import java.rmi.RemoteException;
 
 @Command(
     name = "list",
-    description = "list running agents"
+    description = "lists running agents"
 )
 public class ListAgents implements Runnable {
 

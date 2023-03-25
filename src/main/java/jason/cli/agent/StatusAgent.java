@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Command(
     name = "status",
-    description = "show the status of an agent"
+    description = "shows the status of an agent"
 )
 public class StatusAgent implements Runnable {
 

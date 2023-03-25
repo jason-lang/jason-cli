@@ -44,6 +44,8 @@ Ideally, change the `PATH` in the initialization of your terminal.
 
 ## Uses
 
+(the list of all commands is [here](docs/commands.md).)
+
 ### Interactive Shell
 
 Type the command `jason`: 

@@ -80,6 +80,7 @@ public class StartMAS implements Runnable {
             if (args.size() > 1)
                 parent.parent.println("         "+args);
 
+            // the application has a specific classloader that consider the application classpath
             var cl = new MasAppClassLoader(getClass().getClassLoader());
             var mclass = cl.loadClass(CLILocalMAS.class.getName());
             var r = (RunLocalMAS)mclass.getDeclaredConstructor().newInstance();

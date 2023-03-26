@@ -11,7 +11,7 @@ public class CLILocalMAS extends RunLocalMAS implements Runnable {
     @Override
     public int init(String[] args) {
         runner = this;
-        //System.out.println("***"+this.getClass().getClassLoader());
+        //System.out.println("*** My class loader: "+this.getClass().getClassLoader());
         RunningMASs.setLocalRunningMAS(this);
         var r = super.init(args);
         if (project.getSocName() == null || project.getSocName().isEmpty() || project.getSocName().equals("default"))

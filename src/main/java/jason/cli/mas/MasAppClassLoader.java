@@ -1,6 +1,9 @@
 package jason.cli.mas;
 
+import jason.cli.JasonCLI;
+
 import java.io.*;
+import java.net.URL;
 
 class MasAppClassLoader extends ClassLoader {
     public MasAppClassLoader(ClassLoader parent) {
@@ -10,9 +13,9 @@ class MasAppClassLoader extends ClassLoader {
     @Override
     public Class loadClass(String name) throws ClassNotFoundException {
         //System.out.println("Loading Class '" + name + "' ");
+
+        // CLILocalMAS must be loaded by this loader, so that classes latter loaded from it use this loader
         if (name.equals(CLILocalMAS.class.getName())) {
-            //Class<?> c = super.loadClass(name, false); //findLoadedClass(name);
-            //Class<?> c = super.findSystemClass(name);
             Class<?> c = getJasonCLIClass();
             // force this class to be assigned with this loader
             resolveClass(c);
@@ -25,12 +28,12 @@ class MasAppClassLoader extends ClassLoader {
             if (c != null)
                 return c;
         } catch (Exception e) {
-            System.out.println("no super");
+            // ok, super does not solve
         }
 
         if (c == null) { // c still null
-            System.out.println("looking for  " + name);
-            c = getClass(name);
+            //System.out.println("looking for  " + name);
+            c = getAppClass(name);
             if (c != null) {
                 resolveClass(c);
                 return c;
@@ -41,10 +44,13 @@ class MasAppClassLoader extends ClassLoader {
     }
 
     private Class getJasonCLIClass() throws ClassNotFoundException {
-        // TODO: fix it to load from jason-cli jar in the classpath
-        String file = "/Users/jomi/pro/jason-cli/build/classes/java/main/jason/cli/mas/CLILocalMAS.class";
         try {
-            var b = loadClassFileData(file);
+            //var file = new SourcePath().fixPath("$jason/jason/cli/JasonCLI.class");
+            var file = //"jar:file:/Users/jomi/pro/jason-cli/build/libs/jason-cli-1.0-SNAPSHOT.jar!/jason/cli/mas/CLILocalMAS.class";
+                    "jar:"+
+                            JasonCLI.class.getProtectionDomain().getCodeSource().getLocation()+"!/"+
+                            CLILocalMAS.class.getName().replace('.',File.separatorChar) + ".class";
+            var b = loadClassData(new URL(file).openStream());
             if (b != null) {
                 return defineClass(CLILocalMAS.class.getName(), b, 0, b.length);
             }
@@ -54,11 +60,13 @@ class MasAppClassLoader extends ClassLoader {
         return null;
     }
 
-    private Class getClass(String name) throws ClassNotFoundException {
+    private Class getAppClass(String name) throws ClassNotFoundException {
+        // TODO: consider proper application classpath
+        // .:bin/classes:build/classes/java/main:project classpath:*lib
         String file = "bin/classes/" + name.replace('.', File.separatorChar) + ".class";
         try {
             // This loads the byte code data from the file
-            var b = loadClassFileData(file);
+            var b = loadClassData(new FileInputStream(file));
             if (b != null) {
                 return defineClass(name, b, 0, b.length);
             }
@@ -68,8 +76,7 @@ class MasAppClassLoader extends ClassLoader {
         return null;
     }
 
-    private byte[] loadClassFileData(String name) throws IOException {
-        InputStream stream = new FileInputStream(name); //getClass().getClassLoader().getResourceAsStream(name);
+    private byte[] loadClassData(InputStream stream) throws IOException {
         if (stream == null)
             return null;
         int size = stream.available();

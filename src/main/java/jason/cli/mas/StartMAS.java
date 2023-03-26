@@ -1,6 +1,7 @@
 package jason.cli.mas;
 
 import jason.asSyntax.ASSyntax;
+import jason.infra.local.RunLocalMAS;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -28,13 +29,16 @@ public class StartMAS implements Runnable {
     @Option(names = { "--no-net" }, defaultValue = "false", description = "disable all net services (mind inspector, runtime services, Mbeans, ...")
     boolean noNet;
 
+    @Option(names = { "--env" }, defaultValue = "", paramLabel = "<env class>", description = "class that implements the environment and its arguments")
+    String envClass;
+
     @CommandLine.ParentCommand
     protected MAS parent;
 
     @Override
     public void run() {
         if (RunningMASs.getLocalRunningMAS() != null) {
-            parent.parent.errorMsg("this process can run only one MAS, that currently is "+RunningMASs.getLocalRunningMAS().getName());
+            parent.parent.errorMsg("this process can run only one MAS, that currently is "+RunningMASs.getLocalRunningMAS().getProject().getSocName());
             parent.parent.errorMsg("open another terminal for the new MAS, or stop the current one with 'mas stop'");
             return;
         }
@@ -65,7 +69,7 @@ public class StartMAS implements Runnable {
 
         if (console) {
             args.add("--log-conf");
-            args.add("$jasonJar/templates/console-logging.properties");
+            args.add("$jason/templates/console-logging.properties");
         }
         if (noNet) {
             args.add("--no-net");
@@ -76,9 +80,14 @@ public class StartMAS implements Runnable {
             if (args.size() > 1)
                 parent.parent.println("         "+args);
 
-            var r = new CLILocalMAS();
-            r.init(args.toArray(new String[args.size()]), masName);
-            new Thread(r).start();
+            var cl = new MasAppClassLoader(getClass().getClassLoader());
+            var mclass = cl.loadClass(CLILocalMAS.class.getName());
+            var r = (RunLocalMAS)mclass.getDeclaredConstructor().newInstance();
+            r.addInitArg("masName", masName);
+            r.addInitArg("envName", envClass);
+            r.init(args.toArray(new String[args.size()]));
+            r.create();
+            new Thread( (Runnable) r).start();
 
             parent.parent.println("MAS "+masName+" is running.");
         } catch (Exception e) {

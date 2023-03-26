@@ -8,9 +8,8 @@ import jason.asSemantics.Unifier;
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Plan;
 import jason.asSyntax.PlanBody;
-import jason.asSyntax.Trigger;
 import jason.cli.mas.RunningMASs;
-import jason.infra.repl.print_unifier;
+import jason.stdlib.print_unifier;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 

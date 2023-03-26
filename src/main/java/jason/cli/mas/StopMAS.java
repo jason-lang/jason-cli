@@ -33,7 +33,7 @@ public class StopMAS implements Runnable {
     @Override
     public void run() {
         if (masName.isEmpty() && RunningMASs.isRunningMAS(null) ||
-                RunningMASs.isRunningMAS(null) && RunningMASs.getLocalRunningMAS().getName().equals(masName)) {
+                RunningMASs.isRunningMAS(null) && RunningMASs.getLocalRunningMAS().getProject().getSocName().equals(masName)) {
             // stop the local running MAS
             var localMAS = RunningMASs.getLocalRunningMAS();
             if (exit || !parent.parent.isTerminal()) {

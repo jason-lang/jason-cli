@@ -1,21 +1,34 @@
 package jason.cli.mas;
 
-import jason.JasonException;
 import jason.infra.local.RunLocalMAS;
+import jason.mas2j.parser.ParseException;
+import jason.mas2j.parser.mas2j;
+
+import java.io.StringReader;
 
 public class CLILocalMAS extends RunLocalMAS implements Runnable {
 
-    protected int init(String[] args, String masName) throws JasonException {
+    @Override
+    public int init(String[] args) {
         runner = this;
+        //System.out.println("***"+this.getClass().getClassLoader());
         RunningMASs.setLocalRunningMAS(this);
         var r = super.init(args);
         if (project.getSocName() == null || project.getSocName().isEmpty() || project.getSocName().equals("default"))
-            project.setSocName(masName);
+            project.setSocName(initArgs.get("masName").toString());
         registerMBean();
         registerInRMI();
         registerWebMindInspector();
 
-        create();
+        var envName = initArgs.get("envName").toString();
+        if (!envName.isEmpty()) {
+            var parser = new mas2j(new StringReader(envName));
+            try {
+                project.setEnvClass(parser.classDef());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
         return r;
     }
 
@@ -26,10 +39,10 @@ public class CLILocalMAS extends RunLocalMAS implements Runnable {
     @Override
     public void run() {
         super.start();
-        super.waitEnd();
+        waitEnd();
     }
 
-    protected void waitEnd() {
+    public void waitEnd() {
         super.waitEnd();
         finish(0, true, 0);
     }

@@ -4,8 +4,8 @@ import jason.infra.local.RunLocalMAS;
 import jason.runtime.RuntimeServices;
 import jason.runtime.RuntimeServicesFactory;
 
-import java.io.*;
-import java.net.Socket;
+import java.io.FileReader;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.HashMap;
@@ -15,17 +15,17 @@ import java.util.Properties;
 /** handle the current/known MAS that are running */
 public class RunningMASs {
 
-    protected static CLILocalMAS localRunningMAS = null;
+    protected static RunLocalMAS localRunningMAS = null;
 
-    public static void setLocalRunningMAS(CLILocalMAS r) {
+    public static void setLocalRunningMAS(RunLocalMAS r) {
         localRunningMAS = r;
     }
-    public static CLILocalMAS getLocalRunningMAS() {
+    public static RunLocalMAS getLocalRunningMAS() {
         return localRunningMAS;
     }
 
     public static boolean hasLocalRunningMAS() {
-        return  localRunningMAS != null && localRunningMAS.isRunning();
+        return localRunningMAS != null && localRunningMAS.isRunning();
     }
 
     public static boolean isRunningMAS(String masName) {

@@ -4,10 +4,16 @@ import jason.cli.JasonCLI;
 
 import java.io.*;
 import java.net.URL;
+import java.util.List;
 
 class MasAppClassLoader extends ClassLoader {
-    public MasAppClassLoader(ClassLoader parent) {
+
+    private List<String> paths;
+
+    public MasAppClassLoader(ClassLoader parent, List<String> paths) {
+
         super(parent);
+        this.paths = paths;
     }
 
     @Override
@@ -63,15 +69,22 @@ class MasAppClassLoader extends ClassLoader {
     private Class getAppClass(String name) throws ClassNotFoundException {
         // TODO: consider proper application classpath
         // .:bin/classes:build/classes/java/main:project classpath:*lib
-        String file = "bin/classes/" + name.replace('.', File.separatorChar) + ".class";
-        try {
-            // This loads the byte code data from the file
-            var b = loadClassData(new FileInputStream(file));
-            if (b != null) {
-                return defineClass(name, b, 0, b.length);
+
+        for (String path: paths) {
+            try {
+                if (!path.isEmpty() && !path.endsWith("/"))
+                    path += "/";
+                String file = path + name.replace('.', File.separatorChar) + ".class";
+                //System.out.println("try to load class "+name+" from "+file);
+                // This loads the byte code data from the file
+                var b = loadClassData(new FileInputStream(file));
+                if (b != null) {
+                    return defineClass(name, b, 0, b.length);
+                }
+            } catch (IOException e) {
+                //e.printStackTrace();
+                // ignore, tries next path
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return null;
     }

@@ -31,6 +31,8 @@ public class StartMAS implements Runnable {
 
     @Option(names = { "--env" }, defaultValue = "", paramLabel = "<env class>", description = "class that implements the environment and its arguments")
     String envClass;
+    @Option(names = { "--cp" }, defaultValue = "", paramLabel = "<classpath>", description = "directories where java classes can be found (for environment implementation, for instance)")
+    String classPathArg;
 
     @CommandLine.ParentCommand
     protected MAS parent;
@@ -74,6 +76,12 @@ public class StartMAS implements Runnable {
         if (noNet) {
             args.add("--no-net");
         }
+        var classPathList = new ArrayList<String>();
+        for (var p: classPathArg.split(":"))
+            if (!p.trim().isEmpty())
+                classPathList.add(p.trim());
+        classPathList.add(".");
+        classPathList.add("bin/classes/");
 
         try {
             parent.parent.println("starting MAS "+masName+" ...");
@@ -81,7 +89,10 @@ public class StartMAS implements Runnable {
                 parent.parent.println("         "+args);
 
             // the application has a specific classloader that consider the application classpath
-            var cl = new MasAppClassLoader(getClass().getClassLoader());
+            var cl = new MasAppClassLoader(
+                    getClass().getClassLoader(),
+                    classPathList
+            );
             var mclass = cl.loadClass(CLILocalMAS.class.getName());
             var r = (RunLocalMAS)mclass.getDeclaredConstructor().newInstance();
             r.addInitArg("masName", masName);

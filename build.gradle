@@ -106,6 +106,7 @@ task createBin (dependsOn: 'uberJar') {
             workingDir wdir
         }
         delete fileTree(wdir) { include 'jason-cli-all-*' }
+        delete fileTree(wdir) { include '*.sh' }
     }
 }
 task release (type: Zip, dependsOn: 'createBin') {

@@ -1,5 +1,5 @@
 app compile
-mas start --console --cp="bin/classes" --env=Jugs --no-net
+mas start --env=Jugs --no-net --console
 agent start ag1 --source=agent_a_star.asl
 wait 1000
 mas stop --exit

@@ -69,6 +69,50 @@ Type the command `jason`:
 
 the `<TAB>` key is your new 'mouse' to explore the system.
 
+### Create Applications
+
+New Jason applications can be created with:
+
+```
+jason app create app1 --console
+cd app1
+jason app1.mas2j
+```
+
+The first command creates a Jason application identified by `app1` with two agents and a shared environment. The third command executes the application. The output:
+
+```
+[bob] hello world.
+[alice] hello world.
+```
+
+You can add more agents in the project with:
+
+```
+jason app add-agent karlos
+```
+To run agent karlos, there are two options: stop MAS and run it again; or add karlos in the running MAS:
+
+```
+jason agent start --source="src/agt/karlos.asl" --mas-name="app1" jomi
+```
+
+You can add Gradle scripts for the application with:
+
+```
+jason app add-gradle
+```
+
+More details of the commands with:
+
+```
+jason app
+```
+
+
+Then use your preferred IDE to edit the sources of the application in  the `src` folder.
+
+
 ### Scripts
 
 Create a script file, for instance, a file called `hello.jcli` with content:

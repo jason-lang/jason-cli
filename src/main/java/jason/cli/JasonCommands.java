@@ -56,7 +56,7 @@ public class JasonCommands {
    
 class VersionProvider implements IVersionProvider {
     public String[] getVersion() {
-        return new String[] { "Jason " + Config.get().getJasonVersion() };
+        return new String[] { "Jason CLI " + Config.get().getJasonVersion() };
     }
 }
 

@@ -84,4 +84,15 @@ jason agent start bob { +!g <- .print(ok). }
 
 Type `jason agent stop --help` for details of `stop` command ...
 
+## Application level
 
+```
+Usage: jason app (create | compile | add-agent | add-gradle )
+commands to handle applications
+
+Commands:
+  create      creates the files of a new application
+  compile     compiles the java classes of an application
+  add-agent   adds a new agent into the application
+  add-gradle  adds a Gradle script for the application
+```

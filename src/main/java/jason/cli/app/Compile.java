@@ -1,25 +1,20 @@
 package jason.cli.app;
 
-import jason.asSemantics.Intention;
-import jason.cli.agent.Agent;
-import jason.cli.mas.RunningMASs;
 import jason.mas2j.MAS2JProject;
 import jason.mas2j.parser.mas2j;
 import jason.util.Config;
-import jason.util.CreateNewProject;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 import java.io.File;
 import java.io.FileReader;
-import java.rmi.RemoteException;
 
 
 @Command(
     name = "compile",
     description = "compiles the java classes of an application"
 )
-public class Compile implements Runnable {
+public class Compile extends Common implements Runnable {
 
     @CommandLine.Parameters(paramLabel = "<MAS name>", defaultValue = "",
             arity = "0..1")
@@ -59,31 +54,12 @@ public class Compile implements Runnable {
             launcher.writeScripts(false, false);
             launcher.setTask("compile");
             launcher.run();
+
+            if (file.getName().equals(".temp.mas2j"))
+                file.delete();
         } catch(Exception e) {
-            System.err.println("parsing errors found... \n" + e);
+            parent.parent.errorMsg("error compiling:\n" + e);
         }
     }
-
-    private File getProjectFile(String masName) {
-        var f = new File(masName+".mas2j");
-        if (f.exists())
-            return f;
-
-        // find a .mas2j file in current directory
-        for (var nf: new File(".").listFiles()) {
-            if (nf.getName().endsWith(".mas2j"))
-                return nf;
-        }
-
-        return null;
-    }
-
-    private File createTempProjectFile(String masName) {
-        var f = new File( ".temp.mas2j");
-        CreateNewProject.copyFile("temp", "project", f, true);
-        return f;
-    }
-
-
 }
 

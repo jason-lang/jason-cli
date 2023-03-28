@@ -6,7 +6,7 @@ defaultTasks 'build'
 
 apply plugin: 'java'
 
-version '1.0-SNAPSHOT'
+version '1.0.0-SNAPSHOT'
 group   'org.jason'
 
 java {
@@ -37,29 +37,13 @@ dependencies {
     implementation 'org.jason:jason:3.2-SNAPSHOT'
     // implementation 'info.picocli:picocli:4.7.1'
     implementation 'info.picocli:picocli-shell-jline3:4.7.0'
-    annotationProcessor 'info.picocli:picocli-codegen:4.7.0'
+    //annotationProcessor 'info.picocli:picocli-codegen:4.7.0'
 
     implementation 'org.jline:jline:3.22.0'
     implementation 'org.fusesource.jansi:jansi:2.4.0'
 
     //testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
-
-compileJava {
-    options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
-}
-
-// copy dep jars into build directory
-//task copyJarsToBuild {
-//    inputs.files configurations.runtimeClasspath.files
-//    outputs.dir  'build/libs'
-//    doLast {
-//        copy {
-//            from configurations.runtimeClasspath
-//            into 'build/libs'
-//        }
-//    }
-//}
 
 jar {
     archiveBaseName = 'jason-cli'
@@ -93,22 +77,33 @@ task uberJar(type: Jar, dependsOn: 'classes') {
                    'Implementation-Version': new Date().toString()
     }
     archiveBaseName = 'jason-cli-all'
-    destinationDirectory = file('build/scripts')
+    destinationDirectory = file('build/bin')
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
 
-task copyScriptsToBuild (dependsOn: 'uberJar') {
+task createBin (dependsOn: 'uberJar') {
+    def wdir = 'build/jason-' + project.version
+    doFirst {
+        copy {
+            from 'build/bin'
+            into wdir
+        }
+        exec {
+            commandLine '../../src/main/resources/scripts/create-bin.sh', 'jason-cli-all-' + project.version + '.jar'
+            workingDir wdir
+        }
+        delete fileTree(wdir) { include 'jason-cli-all-*' }
+    }
+}
+task release (type: Zip, dependsOn: 'createBin') {
+    def wdir = 'build/jason-' + project.version
+    from wdir
+    archiveBaseName = 'jason'
     doLast {
         copy {
-            from 'src/main/resources/scripts'
-            into 'build/scripts'
-            include '**'
+            from wdir
+            into 'build/bin'
         }
     }
 }
-
-
-//build.dependsOn(copyJarsToBuild)
-//build.dependsOn(uberJar)
-build.dependsOn(copyScriptsToBuild)

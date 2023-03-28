@@ -59,7 +59,7 @@ Ideally, change the `PATH` in the initialization of your terminal.
 
 ### Interactive Shell
 
-Type the command `jason`: 
+To open the Jason shell, simply executes `jason`: 
 
     $ jason
     Jason interactive shell with completion and autosuggestions.
@@ -94,14 +94,17 @@ jason app add-agent karlos
 To run agent karlos, there are two options: stop MAS and run it again; or add karlos in the running MAS:
 
 ```
-jason agent start --source="src/agt/karlos.asl" --mas-name="app1" jomi
+jason agent start --source="src/agt/karlos.asl" --mas-name="app1" karlos
 ```
 
-You can add Gradle scripts for the application with:
+You can add a Gradle script for the application with:
 
 ```
 jason app add-gradle
 ```
+
+and then run it with `./gradlew run`.
+
 
 More details of the commands with:
 
@@ -112,6 +115,40 @@ jason app
 
 Then use your preferred IDE to edit the sources of the application in  the `src` folder.
 
+The commands of this section are used to help changing the source code of some application. To change or monitor the state of running applications, see the commands below.
+
+
+### Command Line
+
+In your preferred terminal, you can start a new empty MAS with:
+
+    $ jason mas start --console
+
+In another terminal, you can start another MAS with:
+
+    $ jason mas start m1
+
+If you have an application with a `.mas2j` file, you can start it with:
+
+    $ jason app.mas2j
+
+Yet in another terminal:
+
+    $ jason mas list
+    $ jason mas stop m1 --exit
+
+Agent commands:
+
+    $ jason agent start  bob   --mas-name=mas_1
+    $ echo "\!s. +\!s <- .send(bob,tell,hello)." > x.asl
+    $ jason agent start  alice --mas-name=mas_1 --source=x.asl
+    $ jason agent list         --mas-name=mas_1
+    $ jason agent status bob   --mas-name=mas_1
+    $ jason agent mind   bob   --mas-name=mas_1
+    
+    $ echo "+b <- .print(perceived(b))." > y.asl
+    $ jason agent load-into alice --mas-name=mas_1 --source=y.asl
+    $ jason agent mind alice   --mas-name=mas_1 --plans
 
 ### Scripts
 
@@ -153,32 +190,3 @@ beliefs of Bob:
     hello[source(alice)]
 <end of script>
 ```
-
-### Command Line
-
-In your preferred terminal:
-
-    $ jason mas start --console
-
-In another terminal:
-
-    $ jason mas start m1
-
-In another terminal:
-
-    $ jason mas list
-    $ jason mas stop m1 --exit
-
-Agent commands:
-
-    $ jason agent start  bob   --mas-name=mas_1
-    $ echo "\!s. +\!s <- .send(bob,tell,hello)." > x.asl
-    $ jason agent start  alice --mas-name=mas_1 --source=x.asl
-    $ jason agent list         --mas-name=mas_1
-    $ jason agent status bob   --mas-name=mas_1
-    $ jason agent mind   bob   --mas-name=mas_1
-    
-    $ echo "+b <- .print(perceived(b))." > y.asl
-    $ jason agent load-into alice --mas-name=mas_1 --source=y.asl
-    $ jason agent mind alice   --mas-name=mas_1 --plans
-

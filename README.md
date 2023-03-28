@@ -34,10 +34,21 @@ The shell provides completion and suggestions (using `<TAB>`).
 
 Java 17 is required.
 
+You have two options:
+
+* Get a binary version of Jason-CLI or
+* Build it from the sources.
+
+### Download binary
+
+You can download the binary from [here](https://github.com/jason-lang/jason-cli/releases). Decompress the zip file and place the executable file named `jason` in you `PATH`. Make sure this file is executable, if not, `chmod +x jason`. It works in shell based terminals (like Unix, MacOS, WTS, GitBash, ...).
+
+### Build from source
+
     git clone https://github.com/jason-lang/jason-cli.git
     cd jason-cli
-    ./gradlew build
-    export PATH=`pwd`/build/scripts:$PATH
+    ./gradlew createBin
+    export PATH=`pwd`/build/bin:$PATH
 
 These commands will: download JasonCLI, build it, and add `jason` command in the `PATH`. 
 Ideally, change the `PATH` in the initialization of your terminal.

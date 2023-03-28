@@ -99,7 +99,7 @@ task createBin (dependsOn: 'uberJar') {
 task release (type: Zip, dependsOn: 'createBin') {
     def wdir = 'build/jason-' + project.version
     from wdir
-    archiveBaseName = 'jason'
+    archiveBaseName = 'jason-bin'
     doLast {
         copy {
             from wdir

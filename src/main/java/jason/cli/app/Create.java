@@ -83,11 +83,12 @@ public class Create implements Runnable {
     }
 
     public static void copyFile(String id, String source, String agName, File target, boolean consoleApp) {
-        try (var in  = new BufferedReader(new InputStreamReader( Config.get().getDetaultResource(source) ));
+        try (var in  = new BufferedReader(new InputStreamReader( Config.get().getDefaultResource(source) ));
              var out = new BufferedWriter(new FileWriter(target))) {
             String l = in.readLine();
             while (l != null) {
                 l = l.replace("<PROJECT_NAME>", id);
+                l = l.replace("<PROJECT-FILE>", id+".mas2j");
                 l = l.replace("<PROJECT-FILE>", id+".mas2j");
                 l = l.replace("<PROJECT-RUNNER-CLASS>", jason.infra.local.RunLocalMAS.class.getName());
                 l = l.replace("<AG_NAME>", agName);

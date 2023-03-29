@@ -1,6 +1,7 @@
 # Command Line Interface (CLI) for Jason
 
-This project provides a CLI for Jason users. 
+The Jason CLI is a command-line interface tool that you use to initialize, develop, and maintain Jason applications directly from a command shell at design and run time.
+
 
 Example of use in a terminal (`jason>` is the prompt for JasonCLI):
 
@@ -115,7 +116,7 @@ jason app
 
 Then use your preferred IDE to edit the sources of the application in  the `src` folder.
 
-The commands of this section are used to help changing the source code of some application. To change or monitor the state of running applications, see the commands below.
+The commands of this section are used to help change the source code of some application. To change or monitor the state of running applications, see the commands below.
 
 
 ### Command Line

@@ -30,3 +30,4 @@ bin
 hs_err_pid*
 jason.build_artifacts.txt
 .temp.mas2j
+src/test/water-jugs/build.gradle

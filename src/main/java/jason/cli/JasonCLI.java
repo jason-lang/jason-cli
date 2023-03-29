@@ -18,6 +18,7 @@ import picocli.CommandLine;
 import picocli.shell.jline3.PicocliCommands;
 import picocli.shell.jline3.PicocliCommands.PicocliCommandsFactory;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Supplier;
@@ -28,6 +29,16 @@ public class JasonCLI {
 
 
     public static void main(String[] args) {
+        // add jason package
+        try {
+            var jasonBin = JasonCLI.class.getProtectionDomain().getCodeSource().getLocation().toString();
+            if (jasonBin.startsWith("file:"))
+                jasonBin = jasonBin.substring(5);
+            Config.get().addPackage("jason", new File(jasonBin));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         if (args.length == 0) {
             startTerminal();
         } else if (args.length == 1 && args[0].endsWith(".mas2j")) {

@@ -88,7 +88,7 @@ public class Create implements Runnable {
             String l = in.readLine();
             while (l != null) {
                 l = l.replace("<PROJECT_NAME>", id);
-                l = l.replace("<PROJECT-FILE>", id);
+                l = l.replace("<PROJECT-FILE>", id+".mas2j");
                 l = l.replace("<PROJECT-RUNNER-CLASS>", jason.infra.local.RunLocalMAS.class.getName());
                 l = l.replace("<AG_NAME>", agName);
                 l = l.replace("<VERSION>", Config.get().getJasonVersion());
@@ -105,6 +105,5 @@ public class Create implements Runnable {
             e.printStackTrace();
         }
     }
-
 }
 

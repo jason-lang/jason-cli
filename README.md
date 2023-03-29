@@ -42,7 +42,7 @@ You have two options:
 
 ### Download binary
 
-You can download the binary from [here](https://github.com/jason-lang/jason-cli/releases). Decompress the zip file and place the executable file named `jason` in you `PATH`. Make sure this file is executable, if not, `chmod +x jason`. It works in shell based terminals (like Unix, MacOS, WTS, GitBash, ...).
+You can download the binary from [here](https://github.com/jason-lang/jason-cli/releases). Decompress the zip file and place the executable file named `jason` in you `PATH`. Make sure this file is executable, if not, `chmod +x jason`. It works in shell based terminals (like Unix, MacOS, WSL, GitBash, ...).
 
 ### Build from source
 
@@ -92,7 +92,7 @@ You can add more agents in the project with:
 ```
 jason app add-agent karlos
 ```
-To run agent karlos, there are two options: stop MAS and run it again; or add karlos in the running MAS:
+To run agent karlos, there are two options: stop the MAS and run it again; or add karlos in the running MAS:
 
 ```
 jason agent start --source="src/agt/karlos.asl" --mas-name="app1" karlos

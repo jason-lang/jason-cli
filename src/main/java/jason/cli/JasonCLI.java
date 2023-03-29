@@ -1,6 +1,8 @@
 package jason.cli;
 
+import jason.cli.app.Run;
 import jason.cli.mas.RunningMASs;
+import jason.util.Config;
 import org.fusesource.jansi.AnsiConsole;
 import org.jline.builtins.ConfigurationPath;
 import org.jline.console.SystemRegistry;
@@ -30,7 +32,7 @@ public class JasonCLI {
             startTerminal();
         } else if (args.length == 1 && args[0].endsWith(".mas2j")) {
             // case of .mas2j
-            jason.runtime.RunJasonProject.main(args);
+            new Run().run(args[0]);
         } else {
             int exitCode = new CommandLine(new JasonCommands()).execute(args);
             if (!RunningMASs.hasLocalRunningMAS())

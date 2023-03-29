@@ -81,6 +81,7 @@ public class StartMAS implements Runnable {
             if (!p.trim().isEmpty())
                 classPathList.add(p.trim());
         classPathList.add(".");
+        classPathList.add("build/classes/java/main");
         classPathList.add("bin/classes/");
 
         try {

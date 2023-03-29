@@ -41,7 +41,7 @@ In the terminal, you can create a new Jason application, named `app1`, with the 
 jason app create app1
 ----
 
-It creates a folder `app1`, open it with VSCode:
+A folder `app1` is created for the application. Now you  can open it with VSCode:
 
 image:./figs/app-files.png[application]
 
@@ -58,12 +58,6 @@ jason app1.mas2
 
 The two agents print a hello world message.
 
-To add more agents in your project:
-
-----
-jason app add-agent karlos
-----
-
 You can now change the code of your application and evolve the code of your agents.
 
 Just as an example, change the code of `alice.asl` to
@@ -75,3 +69,23 @@ Just as an example, change the code of `alice.asl` to
 ----
 
 executes the system again, open the link:http://127.0.0.1:3272[mind inspector], and see bob's beliefs.
+
+= More on Jason CLI
+
+To add more agents in your project:
+
+----
+jason app add-agent karlos
+----
+
+More commands for the application are shown with
+
+----
+jason app 
+----
+
+and commands to monitor/control running applications with 
+
+----
+jason mas
+----

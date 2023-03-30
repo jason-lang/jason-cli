@@ -75,6 +75,10 @@ public class Common {
             // masName based on directory name
             masName = projectDir.getName();
         }
+        var p = masName.lastIndexOf(File.separatorChar);
+        if (p>=0) {
+            masName = masName.substring(p+1);
+        }
         if (masName.endsWith(".mas2j")) {
             masName = masName.substring(0,masName.length()-6);
         }
@@ -84,5 +88,5 @@ public class Common {
         Create.copyFile(masName, "build.gradle", "", f, true);
         return f;
     }
-}
+}   
 

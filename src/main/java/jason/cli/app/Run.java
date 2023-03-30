@@ -12,12 +12,20 @@ public class Run extends  Common {
             System.err.println("the application file "+mas2j+" does not exist!");
             return;
         }
-        var buildFile = ensureGradleFile( mas2j );
+        var projectDir = mas2jFile.getAbsoluteFile().getParentFile();
 
-        try (var connection = getGradleConnection(buildFile.getAbsoluteFile().getParentFile())) {
+        var created = getOrCreateGradleFile( mas2j );
+
+        try (var connection = getGradleConnection(projectDir)) {
             getGradleBuild(connection, false, true)
                     .forTasks("run")
                     .run();
+
+            if (created) {
+                // delete created files
+                new File(projectDir+"/build.gradle").delete();
+                new File(projectDir+"/settings.gradle").delete();
+            }
         } catch (Exception e) {
             System.err.println("Error running 'gradle run'");
         }

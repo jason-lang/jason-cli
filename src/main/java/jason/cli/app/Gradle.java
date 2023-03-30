@@ -3,10 +3,12 @@ package jason.cli.app;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
+import java.io.File;
+
 
 @Command(
     name = "add-gradle",
-    description = "adds a Gradle script for the application"
+    description = "adds a Gradle script for the application in the current directory"
 )
 public class Gradle extends Common implements Runnable {
 
@@ -15,21 +17,18 @@ public class Gradle extends Common implements Runnable {
 
     @Override
     public void run() {
-        try {
-            var gradleFile = ensureGradleFile( "" );
-            try (var connection = getGradleConnection(gradleFile.getAbsoluteFile().getParentFile())) {
-                getGradleBuild(connection)
-                        .forTasks("wrapper")
-                        .run();
-            } catch (Exception e) {
-                System.err.println("Error running gradle run "+e);
-            }
-            parent.parent.println("\n\nfile "+gradleFile+" created.");
-            parent.parent.println("\nyou can execute your application with:");
-            parent.parent.println("    ./gradlew run");
-        } catch(Exception e) {
-            parent.parent.errorMsg("error adding Gradle");
+        var created = getOrCreateGradleFile( "" );
+        try (var connection = getGradleConnection(new File("." ))) { //gradleFile.getAbsoluteFile().getParentFile())
+            getGradleBuild(connection)
+                    .forTasks("wrapper")
+                    .run();
+        } catch (Exception e) {
+            System.err.println("Error creating gradle wrapper");
         }
+        if (created)
+            parent.parent.println("\n\nfile build.gradle created.");
+        parent.parent.println("\nyou can execute your application with:");
+        parent.parent.println("    ./gradlew run");
     }
 }
 

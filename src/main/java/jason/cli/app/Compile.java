@@ -3,10 +3,12 @@ package jason.cli.app;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
+import java.io.File;
+
 
 @Command(
     name = "compile",
-    description = "compiles the java classes of an application"
+    description = "compiles the java classes of the application in the current directory"
 )
 public class Compile extends Common implements Runnable {
 
@@ -15,15 +17,21 @@ public class Compile extends Common implements Runnable {
 
     @Override
     public void run() {
-        var buildFile = ensureGradleFile("");
+        var created = getOrCreateGradleFile("");
 
-        try (var connection = getGradleConnection(buildFile.getAbsoluteFile().getParentFile())) {
+        try (var connection = getGradleConnection(new File("." ))) { //buildFile.getAbsoluteFile().getParentFile())) {
 //            connection.model(GradleProject.class) // *** does not work
 //                    .setStandardOutput(System.out)
 //                    .withArguments("--build-file", buildFile.getAbsolutePath());
             getGradleBuild(connection)
                     .forTasks("compileJava")
                     .run();
+
+            if (created) {
+                // delete created files
+                new File("build.gradle").delete();
+                new File("settings.gradle").delete();
+            }
         } catch(Exception e) {
             parent.parent.errorMsg("error compiling");
         }

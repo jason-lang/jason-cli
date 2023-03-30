@@ -50,7 +50,7 @@ public class Common {
         return b;
     }
 
-    File ensureGradleFile(String masName) {
+    boolean getOrCreateGradleFile(String masName) {
         var masFile = getProjectFile(masName);
         if (masFile == null)
             masFile = new File(".");
@@ -69,7 +69,7 @@ public class Common {
 
         var f = new File(projectDir+"/build.gradle");
         if (f.exists())
-            return f;
+            return false;
 
         if (masName.isEmpty()) {
             // masName based on directory name
@@ -86,7 +86,7 @@ public class Common {
         // create a temp file
         //f = new File(projectDir+"/.build-temp.gradle"); // does not work with gradle
         Create.copyFile(masName, "build.gradle", "", f, true);
-        return f;
+        return true;
     }
 }   
 

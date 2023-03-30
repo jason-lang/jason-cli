@@ -84,37 +84,39 @@ task uberJar(type: Jar, dependsOn: 'classes') {
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 
-    doLast {
-        copy {
-            from 'src/main/resources/scripts'
-            into 'build/bin'
-        }
-    }
+//    doLast {
+//        copy {
+//            from 'src/main/resources/scripts'
+//            into 'build/bin'
+//        }
+//    }
 }
 
 task createBin (dependsOn: 'uberJar') {
-    def wdir = 'build/jason-' + project.version
+    def wdir = 'build/bin'
     doFirst {
-        copy {
-            from 'build/bin'
-            into wdir
-        }
         exec {
             commandLine '../../src/main/resources/scripts/create-bin.sh', 'jason-cli-all-' + project.version + '.jar'
             workingDir wdir
         }
+    }
+    doLast {
         delete fileTree(wdir) { include 'jason-cli-all-*' }
         delete fileTree(wdir) { include '*.sh' }
+        copy {
+            from 'build/bin'
+            into 'build/jason-' + project.version
+        }
     }
 }
 task release (type: Zip, dependsOn: 'createBin') {
     def wdir = 'build/jason-' + project.version
     from wdir
     archiveBaseName = 'jason-bin'
-    doLast {
-        copy {
-            from wdir
-            into 'build/bin'
-        }
-    }
+//    doLast {
+//        copy {
+//            from wdir
+//            into 'build/bin'
+//        }
+//    }
 }

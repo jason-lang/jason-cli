@@ -58,6 +58,15 @@ public class Common {
         try {
             projectDir = projectDir.getCanonicalFile();
         } catch (IOException e) {  }
+
+        // checks settings.gradle
+        var sets = new File(projectDir+"/settings.gradle");
+        if (!sets.exists()) {
+            try {
+                sets.createNewFile();
+            } catch (IOException e) {}
+        }
+
         var f = new File(projectDir+"/build.gradle");
         if (f.exists())
             return f;

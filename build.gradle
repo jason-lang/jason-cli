@@ -83,13 +83,6 @@ task uberJar(type: Jar, dependsOn: 'classes') {
     destinationDirectory = file('build/bin')
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
-
-//    doLast {
-//        copy {
-//            from 'src/main/resources/scripts'
-//            into 'build/bin'
-//        }
-//    }
 }
 
 task createBin (dependsOn: 'uberJar') {
@@ -113,10 +106,4 @@ task release (type: Zip, dependsOn: 'createBin') {
     def wdir = 'build/jason-' + project.version
     from wdir
     archiveBaseName = 'jason-bin'
-//    doLast {
-//        copy {
-//            from wdir
-//            into 'build/bin'
-//        }
-//    }
 }

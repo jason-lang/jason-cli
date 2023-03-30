@@ -61,10 +61,6 @@ jar {
 task run (type: JavaExec, dependsOn: 'build') {
     mainClass = 'jason.cli.JasonCLI'
     standardInput = System.in
-    //args '<PROJECT-FILE>'
-    // options:
-    //     args = ['<PROJECT-FILE>', '--debug']
-    //     args = ['<PROJECT-FILE>', '--log-conf', 'l.p'] // to use file l.p to configure logging
     classpath sourceSets.main.runtimeClasspath
 }
 

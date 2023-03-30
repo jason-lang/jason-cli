@@ -18,11 +18,14 @@ public class Compile extends Common implements Runnable {
         var buildFile = ensureGradleFile("");
 
         try (var connection = getGradleConnection(buildFile.getAbsoluteFile().getParentFile())) {
-            connection.newBuild()
+//            connection.model(GradleProject.class) // *** does not work
+//                    .setStandardOutput(System.out)
+//                    .withArguments("--build-file", buildFile.getAbsolutePath());
+            getGradleBuild(connection)
                     .forTasks("compileJava")
                     .run();
         } catch(Exception e) {
-            parent.parent.errorMsg("error compiling:\n" + e);
+            parent.parent.errorMsg("error compiling");
         }
     }
 }

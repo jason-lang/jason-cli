@@ -15,11 +15,11 @@ public class Run extends  Common {
         var buildFile = ensureGradleFile( mas2j );
 
         try (var connection = getGradleConnection(buildFile.getAbsoluteFile().getParentFile())) {
-            connection.newBuild()
+            getGradleBuild(connection, false, true)
                     .forTasks("run")
                     .run();
         } catch (Exception e) {
-            System.err.println("Error running gradle run "+e);
+            System.err.println("Error running 'gradle run'");
         }
     }
 }

@@ -1,5 +1,6 @@
 package jason.cli.app;
 
+import org.gradle.tooling.BuildLauncher;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
 
@@ -39,6 +40,16 @@ public class Common {
                 .connect();
     }
 
+    BuildLauncher getGradleBuild(ProjectConnection conn) {
+        return getGradleBuild(conn, true, true);
+    }
+    BuildLauncher getGradleBuild(ProjectConnection conn, boolean setStdOut, boolean setStdErr) {
+        var b = conn.newBuild();
+        if (setStdOut) b.setStandardOutput(System.out);
+        if (setStdErr) b.setStandardError(System.err);
+        return b;
+    }
+
     File ensureGradleFile(String masName) {
         var masFile = getProjectFile(masName);
         if (masFile == null)
@@ -60,6 +71,7 @@ public class Common {
         }
 
         // create a temp file
+        //f = new File(projectDir+"/.build-temp.gradle"); // does not work with gradle
         Create.copyFile(masName, "build.gradle", "", f, true);
         return f;
     }

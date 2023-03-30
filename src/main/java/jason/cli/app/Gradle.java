@@ -18,17 +18,17 @@ public class Gradle extends Common implements Runnable {
         try {
             var gradleFile = ensureGradleFile( "" );
             try (var connection = getGradleConnection(gradleFile.getAbsoluteFile().getParentFile())) {
-                connection.newBuild()
+                getGradleBuild(connection)
                         .forTasks("wrapper")
                         .run();
             } catch (Exception e) {
                 System.err.println("Error running gradle run "+e);
             }
-            parent.parent.println("file "+gradleFile+" created.");
+            parent.parent.println("\n\nfile "+gradleFile+" created.");
             parent.parent.println("\nyou can execute your application with:");
             parent.parent.println("    ./gradlew run");
         } catch(Exception e) {
-            parent.parent.errorMsg("error adding Gradle:\n" + e);
+            parent.parent.errorMsg("error adding Gradle");
         }
     }
 }

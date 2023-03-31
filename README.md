@@ -1,3 +1,7 @@
+# this project was moved as a subproject of Jason
+
+see https://github.com/jason-lang/jason/tree/develop/jason-cli
+
 # Command Line Interface (CLI) for Jason
 
 The Jason CLI is a command-line interface tool that you use to initialize, develop, and maintain Jason applications directly from a command shell at design and run time.
